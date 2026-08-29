@@ -1,0 +1,1 @@
+const API_BASE = '/PotatoCorner_IMS/api';

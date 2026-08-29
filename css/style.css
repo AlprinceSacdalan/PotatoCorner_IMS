@@ -1,0 +1,221 @@
+/* ===== Reset & base ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f5f7;
+    color: #2d2d2d;
+}
+
+/* ===== Login page ===== */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-box {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+}
+
+.login-logo {
+    display: block;
+    width: 100px;
+    height: auto;
+    margin: 0 auto 1rem;
+}
+
+.login-box h2 {
+    font-size: 18px;
+    margin-bottom: 1.5rem;
+    color: #1b1b1b;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.login-box input:focus {
+    outline: none;
+    border-color: #2e7d32;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 12px;
+    background: #2e7d32;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.login-box button:hover {
+    background: #256428;
+}
+
+.error-text {
+    color: #c0392b;
+    font-size: 13px;
+    min-height: 18px;
+    margin-bottom: 4px;
+}
+
+/* ===== Dashboard topbar ===== */
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.topbar #welcomeMsg {
+    font-size: 14px;
+    color: #444;
+}
+
+.topbar button {
+    padding: 8px 16px;
+    background: #f4f5f7;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.topbar button:hover {
+    background: #eaeaea;
+}
+
+/* ===== Sidebar layout ===== */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    padding: 1.5rem 0;
+    flex-shrink: 0;
+}
+
+.sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 1.25rem 1.5rem;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.sidebar .brand img {
+    width: 32px;
+    height: 32px;
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 10px 1.25rem;
+    color: #444;
+    text-decoration: none;
+    font-size: 14px;
+    border-left: 3px solid transparent;
+}
+
+.sidebar nav a:hover {
+    background: #f4f5f7;
+}
+
+.sidebar nav a.active {
+    background: #eaf3ea;
+    border-left-color: #2e7d32;
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== Cards & stats  ===== */
+.stat-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* ===== Tables ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+th, td {
+    text-align: left;
+    padding: 10px 8px;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+}
+
+/* ===== Status badges ===== */
+.status-ok    { background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+.status-low   { background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+.status-watch { background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+
+/* ===== Buttons (general) ===== */
+button {
+    font-family: inherit;
+}
+
+/* ===== Responsive (staff mobile pages) ===== */
+@media (max-width: 768px) {
+    .login-box { max-width: 90%; }
+    table { font-size: 12px; }
+}
+
+
+.page-content { padding: 24px; }
+.page-header { margin-bottom: 1rem; }
+.adjustment-form {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+}
+.form-label { font-size: 13px; color: #666; margin-bottom: 8px; }
+.form-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.form-row select, .form-row input {
+    padding: 8px;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    font-size: 13px;
+}
+.form-row button {
+    padding: 8px 16px;
+    background: #2e7d32;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}

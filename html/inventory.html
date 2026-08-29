@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inventory Maintenance</title>
+<link rel="stylesheet" href="/PotatoCorner_IMS/css/style.css">
+</head>
+<body>
+
+<div class="app-layout">
+    <div class="sidebar">
+        <div class="brand">
+            <img src="/PotatoCorner_IMS/assets/images/pc_logo.png" alt="Potato Corner Logo">
+            <span>Potato Corner IMS</span>
+        </div>
+        <nav>
+            <a href="/PotatoCorner_IMS/html/dashboard.html">Dashboard</a>
+            <a href="/PotatoCorner_IMS/html/inventory.html" class="active">Inventory</a>
+            <a href="/PotatoCorner_IMS/html/menu.html">Menu / BOM</a>
+            <a href="/PotatoCorner_IMS/html/reorder.html">Reorder List</a>
+            <a href="/PotatoCorner_IMS/html/reports.html">Sales & Reports</a>
+            <a href="/PotatoCorner_IMS/html/waste.html">Waste Log</a>
+            <a href="/PotatoCorner_IMS/html/expiry.html">Expiry Alerts</a>
+            <a href="/PotatoCorner_IMS/html/staff.html">Staff Accounts</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="topbar">
+            <span id="welcomeMsg"></span>
+            <button id="logoutBtn">Log out</button>
+        </div>
+
+<div class="page-content">
+    <div class="page-header">
+        <h1>Inventory Maintenance</h1>
+    </div>
+
+    <table id="inventoryTable">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Unit</th>
+                <th>Current stock</th>
+                <th>Threshold</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="inventoryBody">
+            <!-- rows inserted by JS -->
+        </tbody>
+    </table>
+
+    <div class="adjustment-form">
+        <p class="form-label">Record delivery / adjustment</p>
+        <div class="form-row">
+            <select id="materialSelect"></select>
+            <input type="number" id="quantityInput" placeholder="Quantity" step="0.01">
+            <select id="typeSelect">
+                <option value="delivery">Delivery</option>
+                <option value="correction">Correction</option>
+            </select>
+            <button id="saveAdjustmentBtn">Save adjustment</button>
+        </div>
+        <p id="adjustmentMsg" class="error-text"></p>
+    </div>
+</div>
+
+<script src="/PotatoCorner_IMS/js/config.js"></script>
+<script src="/PotatoCorner_IMS/js/auth-guard.js"></script>
+<script src="/PotatoCorner_IMS/js/inventory.js"></script>
+</body>
+</html>
