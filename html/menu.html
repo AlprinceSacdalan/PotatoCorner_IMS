@@ -23,9 +23,42 @@
     <div class="main-content">
         <div class="topbar"><span id="welcomeMsg"></span><button id="logoutBtn">Log out</button></div>
         <div class="page-content">
-            <h1>Menu / BOM</h1>
-            <p>Coming soon</p>
+    <h1>Menu / BOM</h1>
+
+    <div class="menu-bom-layout">
+        <div class="menu-list-panel">
+            <div class="panel-header">
+                <p class="form-label">Menu items</p>
+                <button id="addMenuItemBtn">+ Add menu item</button>
+            </div>
+            <div id="menuItemList" class="menu-item-list"></div>
         </div>
+
+        <div class="recipe-panel">
+            <p class="form-label" id="recipeTitle">Select a menu item to view its recipe</p>
+            <table id="recipeTable" style="display:none;">
+                <thead>
+                    <tr><th>Ingredient</th><th>Qty required</th></tr>
+                </thead>
+                <tbody id="recipeBody"></tbody>
+            </table>
+
+            <div id="addIngredientForm" class="form-row" style="display:none; margin-top:1rem;">
+                <select id="ingredientSelect"></select>
+                <input type="number" id="ingredientQty" placeholder="Quantity" step="0.01">
+                <button id="addIngredientBtn">+ Add ingredient</button>
+            </div>
+            <p id="recipeMsg" class="error-text"></p>
+        </div>
+    </div>
+
+    <!-- Simple add-item form, shown/hidden via JS -->
+    <div id="addMenuItemModal" class="form-row" style="display:none; margin-top:1.5rem; padding-top:1rem; border-top:1px solid #e0e0e0;">
+        <input type="text" id="newItemName" placeholder="Item name">
+        <input type="number" id="newItemPrice" placeholder="Price" step="0.01">
+        <button id="saveNewItemBtn">Save item</button>
+    </div>
+</div>
     </div>
 </div>
 <script src="/PotatoCorner_IMS/js/config.js"></script>
