@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process Sale</title>
+<link rel="stylesheet" href="/PotatoCorner_IMS/css/style.css">
+</head>
+<body>
+
+<div class="staff-topbar">
+    <span class="brand">
+      <img src="/PotatoCorner_IMS/assets/images/pc_logo.png" alt="Potato Corner logo">
+      Potato Corner IMS
+    </span>
+    <nav>
+        <a href="/PotatoCorner_IMS/html/staff_dashboard.html">Dashboard</a>
+        <a href="/PotatoCorner_IMS/html/process_sale.html" class="active">Process Sale</a>
+        <a href="/PotatoCorner_IMS/html/staff_inventory.html">Inventory</a>
+    </nav>
+    <div class="user-area">
+        <span id="welcomeMsg"></span>
+        <button id="logoutBtn">Log out</button>
+    </div>
+</div>
+
+<div class="page-content">
+    <h1>Process Sale</h1>
+
+    <div class="sale-layout">
+        <div class="menu-grid-panel">
+            <input type="text" id="searchInput" placeholder="Search menu item">
+            <div id="menuGrid" class="menu-grid"></div>
+        </div>
+
+        <div class="order-summary-panel">
+            <p class="form-label">Order summary</p>
+            <div id="orderList" class="order-list"></div>
+            <div class="order-total">
+                <span>Total</span>
+                <span id="orderTotal">₱0.00</span>
+            </div>
+            <p id="saleMsg" class="error-text"></p>
+            <button id="confirmSaleBtn">Confirm sale</button>
+        </div>
+    </div>
+</div>
+
+<script src="/PotatoCorner_IMS/js/config.js"></script>
+<script src="/PotatoCorner_IMS/js/auth-guard.js"></script>
+<script src="/PotatoCorner_IMS/js/process_sale.js"></script>
+</body>
+</html>

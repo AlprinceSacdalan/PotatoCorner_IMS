@@ -7,13 +7,36 @@
 <link rel="stylesheet" href="/PotatoCorner_IMS/css/style.css">
 </head>
 <body>
-<div class="topbar">
-    <span id="welcomeMsg"></span>
-    <button id="logoutBtn">Log out</button>
-</div>
-<h1>Staff Dashboard</h1>
-<p>(build out quick transaction panel here next)</p>
 
+<div class="staff-topbar">
+    <span class="brand">
+      <img src="/PotatoCorner_IMS/assets/images/pc_logo.png" alt="Potato Corner logo">
+      Potato Corner IMS
+    </span>
+    <nav>
+        <a href="/PotatoCorner_IMS/html/staff_dashboard.html" class="active">Dashboard</a>
+        <a href="/PotatoCorner_IMS/html/process_sale.html">Process Sale</a>
+        <a href="/PotatoCorner_IMS/html/staff_inventory.html">Inventory</a>
+    </nav>
+    <div class="user-area">
+        <span id="welcomeMsg"></span>
+        <button id="logoutBtn">Log out</button>
+    </div>
+</div>
+
+<div class="page-content">
+    <h1>Good day, <span id="firstName"></span></h1>
+    <div class="staff-nav">
+        <a href="/PotatoCorner_IMS/html/process_sale.html" class="staff-nav-card">
+            <span class="card-icon">🧾</span>
+            Process Sale
+        </a>
+        <a href="/PotatoCorner_IMS/html/staff_inventory.html" class="staff-nav-card">
+            <span class="card-icon">📦</span>
+            View Inventory
+        </a>
+    </div>
+</div>
 
 <script src="/PotatoCorner_IMS/js/config.js"></script>
 <script src="/PotatoCorner_IMS/js/auth-guard.js"></script>

@@ -1,5 +1,10 @@
 /* ===== Reset & base ===== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: #f4f5f7;
@@ -181,13 +186,25 @@ th, td {
 
 /* ===== Status badges ===== */
 .status-ok    { 
-    background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 12px; font-size: 12px; 
+    background: #d4edda; 
+    color: #155724; 
+    padding: 3px 10px; 
+    border-radius: 12px; 
+    font-size: 12px; 
 }
 .status-low   { 
-    background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 12px; font-size: 12px; 
+    background: #f8d7da; 
+    color: #721c24; 
+    padding: 3px 10px;
+    border-radius: 12px; 
+    font-size: 12px; 
 }
 .status-watch { 
-    background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 12px; font-size: 12px;
+    background: #fff3cd;
+    color: #856404; 
+    padding: 3px 10px; 
+    border-radius: 12px; 
+    font-size: 12px;
  }
 
 /* ===== Buttons (general) ===== */
@@ -221,7 +238,10 @@ button {
 }
 
 .form-row { 
-    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    display: flex;
+    gap: 8px; 
+    align-items: center; 
+    flex-wrap: wrap;
  }
 
 .form-row select, .form-row input {
@@ -275,4 +295,222 @@ button {
 
 .menu-item-row.selected { 
     background: #eaf3ea; 
+}
+
+/* Staff Dashboard side to paki alala */
+.staff-nav { 
+    display: flex; 
+    gap: 16px;
+    margin-top: 1.5rem; 
+}
+
+.staff-nav-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 28px 24px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #2d2d2d;
+    font-weight: 600;
+    font-size: 14px;
+    flex: 1;
+    max-width: 180px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.staff-nav-card:hover { 
+    border-color: #2e7d32;
+    background: #f4faf4; 
+}
+
+.card-icon {
+    font-size: 28px;
+}
+
+@media (max-width: 768px) {
+    .staff-nav { flex-wrap: wrap; }
+    .staff-nav-card { max-width: none; flex: 1 1 45%; }
+}
+
+/* Staff navigation bar  */
+.staff-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 24px;
+    background: #2e7d32;
+    color: #fff;
+}
+
+.staff-topbar .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.staff-topbar .brand img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+
+.staff-topbar nav {
+    display: flex;
+    gap: 6px;
+}
+
+.staff-topbar nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    opacity: 0.85;
+}
+
+.staff-topbar nav a:hover {
+    background: rgba(255,255,255,0.15);
+    opacity: 1;
+}
+
+.staff-topbar nav a.active {
+    background: rgba(255,255,255,0.2);
+    opacity: 1;
+    font-weight: 600;
+}
+
+.staff-topbar .user-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.staff-topbar .user-area button {
+    padding: 6px 14px;
+    background: #fff;
+    color: #2e7d32;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .staff-topbar { 
+        flex-wrap: wrap; 
+        gap: 10px; 
+        padding: 12px 16px; 
+    }
+
+    .staff-topbar nav { 
+        order: 3; 
+        width: 100%; 
+        justify-content: space-around;
+    }
+
+    .staff-topbar nav a { 
+        flex: 1; 
+        text-align: center; 
+    }
+}
+
+/*Process Sale kasama sa function ng staff */
+.sale-layout { 
+    display: grid; 
+    grid-template-columns: 1.4fr 1fr; 
+    gap: 20px; 
+    margin-top: 1rem; 
+}
+
+.menu-grid-panel input { 
+    width: 100%; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    border: 1px solid #d9d9d9; 
+    border-radius: 6px; 
+}
+
+.menu-grid { 
+    display: grid; 
+    grid-template-columns: 
+    repeat(auto-fill, minmax(120px, 1fr)); 
+    gap: 10px; 
+}
+
+.menu-card { 
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px; 
+    padding: 12px; 
+    font-size: 13px; 
+    text-align: center; 
+    cursor: pointer; 
+    background: #fff; 
+}
+
+.menu-card:hover { 
+    background: #f4f5f7; 
+    border-color: #2e7d32; 
+}
+
+.menu-price { 
+    color: #666; 
+    font-size: 12px; 
+}
+
+.order-summary-panel { 
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px; 
+    padding: 1rem; 
+    background: #fff; 
+}
+
+.order-line { 
+    display: flex; 
+    justify-content: space-between;
+    padding: 6px 0; 
+    font-size: 13px; 
+    border-bottom: 1px solid #f0f0f0;
+ }
+
+.remove-btn {
+    border: none;
+    background: none;
+    color: #c0392b;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 8px;
+    padding: 4px 8px;
+    min-width: 24px;
+}
+
+.order-total { 
+    display: flex; 
+    justify-content: space-between; 
+    font-weight: 600; 
+    padding-top: 10px; 
+    margin-top: 8px; 
+    border-top: 1px solid #e0e0e0; 
+}
+
+#confirmSaleBtn { 
+    width: 100%; 
+    margin-top: 12px; 
+    padding: 12px; 
+    background: #2e7d32; 
+    color: #fff; border: none; 
+    border-radius: 8px; font-weight: 600; 
+    cursor: pointer; 
+}
+
+
+@media (max-width: 768px) {
+    .sale-layout { grid-template-columns: 1fr; }
 }
