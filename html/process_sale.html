@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Process Sale</title>
 <link rel="stylesheet" href="/PotatoCorner_IMS/css/style.css">
+
 </head>
+
 <body>
 
 <div class="staff-topbar">
@@ -42,6 +45,19 @@
             </div>
             <p id="saleMsg" class="error-text"></p>
             <button id="confirmSaleBtn">Confirm sale</button>
+        </div>
+    </div>
+</div>
+
+<!-- Flavor / Mix & Max selection modal -->
+<div id="flavorModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <h2 id="flavorModalTitle"></h2>
+        <div id="flavorModalBody"></div>
+        <p id="flavorModalError" class="error-text"></p>
+        <div class="modal-actions">
+            <button id="flavorModalCancel">Cancel</button>
+            <button id="flavorModalConfirm">Add to order</button>
         </div>
     </div>
 </div>

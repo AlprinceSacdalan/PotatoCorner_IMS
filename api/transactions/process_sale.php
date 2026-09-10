@@ -2,6 +2,8 @@
 require '../helpers/response.php';
 require '../config/db_config.php';
 
+const MIX_COMPONENT_MAX_FLAVORS = 1;
+
 $input = json_decode(file_get_contents('php://input'), true);
 $user_id = $input['user_id'] ?? null;
 $items = $input['items'] ?? null;
@@ -13,9 +15,9 @@ if (!$user_id || !$items || count($items) === 0) {
 $conn->begin_transaction();
 
 try {
-    // validate stock (and flavor counts) 
+    // Validate stock (and flavor counts) 
     foreach ($items as $item) {
-        // Base recipe check (existing logic, unchanged)
+        // Base recipe check 
         $stmt = $conn->prepare("
             SELECT rm.material_id, rm.name, rm.current_stock, rb.quantity_required
             FROM recipes_bom rb
@@ -34,6 +36,7 @@ try {
 
         $hasComponents = !empty($item['components']);
 
+        // Item-level flavor check (non-Mix items only)
         if (!$hasComponents && !empty($item['flavors'])) {
             $sizeInfo = getSizeFlavorInfo($conn, getMenuSizeName($conn, $item['menu_id']));
             $flavors = $item['flavors'];
@@ -60,7 +63,7 @@ try {
 
                 if (!empty($comp['flavors'])) {
                     $flavors = $comp['flavors'];
-                    validateFlavorCount($flavors, $mixSizeInfo['max_flavors']);
+                    validateFlavorCount($flavors, MIX_COMPONENT_MAX_FLAVORS);
                     $gramsEach = computeGramsPerFlavor($mixSizeInfo['grams_per_serving'], $comp['is_extra_flavor'] ?? false, count($flavors));
                     foreach ($flavors as $flavorId) {
                         checkStock($conn, $flavorId, $gramsEach * $item['quantity']);
@@ -85,7 +88,7 @@ try {
     $stmt->execute();
     $transaction_id = $stmt->insert_id;
 
-    // insert rows and deduct stock 
+    // Insert rows and deduct stock 
     foreach ($items as $item) {
         $stmt = $conn->prepare("SELECT price FROM menu_items WHERE menu_id = ?");
         $stmt->bind_param("i", $item['menu_id']);
@@ -100,7 +103,7 @@ try {
         $stmt->execute();
         $detail_id = $stmt->insert_id;
 
-        // Deduct base recipe ingredients (unchanged)
+        // Deduct base recipe ingredients 
         $stmt = $conn->prepare("SELECT material_id, quantity_required FROM recipes_bom WHERE menu_id = ?");
         $stmt->bind_param("i", $item['menu_id']);
         $stmt->execute();
@@ -138,8 +141,6 @@ try {
                 $gramsUsed = $mixRow['grams_required'] * $item['quantity'];
                 deductStock($conn, $mixRow['base_material_id'], $gramsUsed);
 
-                // mix_components.flavor_material_id / is_extra_flavor deprecated —
-                // left NULL/0, real data goes in mix_component_flavors below.
                 $stmt = $conn->prepare("INSERT INTO mix_components (transactionDetail_id, snack_type, grams_used, flavor_material_id, is_extra_flavor) VALUES (?, ?, ?, NULL, 0)");
                 $stmt->bind_param("isd", $detail_id, $comp['snack_type'], $gramsUsed);
                 $stmt->execute();
@@ -172,6 +173,7 @@ try {
 }
 
 // Helper functions 
+
 
 function getMenuSizeName($conn, $menu_id) {
     $stmt = $conn->prepare("SELECT size_name FROM menu_items WHERE menu_id = ?");
