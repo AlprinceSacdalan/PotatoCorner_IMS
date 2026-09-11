@@ -38,7 +38,7 @@
             <p class="form-label" id="recipeTitle">Select a menu item to view its recipe</p>
             <table id="recipeTable" style="display:none;">
                 <thead>
-                    <tr><th>Ingredient</th><th>Qty required</th></tr>
+                    <tr><th>Ingredient</th><th>Qty required</th><th>Actions</th></tr>
                 </thead>
                 <tbody id="recipeBody"></tbody>
             </table>
@@ -52,11 +52,20 @@
         </div>
     </div>
 
-    <!-- Simple add-item form, shown/hidden via JS -->
-    <div id="addMenuItemModal" class="form-row" style="display:none; margin-top:1.5rem; padding-top:1rem; border-top:1px solid #e0e0e0;">
-        <input type="text" id="newItemName" placeholder="Item name">
-        <input type="number" id="newItemPrice" placeholder="Price" step="0.01">
-        <button id="saveNewItemBtn">Save item</button>
+  
+    <div id="addMenuItemModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h2 id="menuItemModalTitle">Add menu item</h2>
+            <div class="form-row" style="margin-top:1rem;">
+                <input type="text" id="newItemName" placeholder="Item name">
+                <input type="number" id="newItemPrice" placeholder="Price" step="0.01">
+            </div>
+            <p id="menuItemModalError" class="error-text"></p>
+            <div class="modal-actions">
+                <button id="cancelMenuItemBtn">Cancel</button>
+                <button id="saveNewItemBtn">Save item</button>
+            </div>
+        </div>
     </div>
 </div>
     </div>

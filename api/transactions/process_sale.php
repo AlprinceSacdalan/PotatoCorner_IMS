@@ -17,7 +17,7 @@ $conn->begin_transaction();
 try {
     // Validate stock (and flavor counts) 
     foreach ($items as $item) {
-        // Base recipe check 
+        // Base recipe check (existing logic, unchanged)
         $stmt = $conn->prepare("
             SELECT rm.material_id, rm.name, rm.current_stock, rb.quantity_required
             FROM recipes_bom rb
@@ -36,7 +36,6 @@ try {
 
         $hasComponents = !empty($item['components']);
 
-        // Item-level flavor check (non-Mix items only)
         if (!$hasComponents && !empty($item['flavors'])) {
             $sizeInfo = getSizeFlavorInfo($conn, getMenuSizeName($conn, $item['menu_id']));
             $flavors = $item['flavors'];
@@ -98,8 +97,10 @@ try {
 
         $hasComponents = !empty($item['components']);
 
-        $stmt = $conn->prepare("INSERT INTO transaction_details (transaction_id, menu_id, quantity, subtotal, flavor_material_id, is_extra_flavor) VALUES (?, ?, ?, ?, NULL, 0)");
-        $stmt->bind_param("iiid", $transaction_id, $item['menu_id'], $item['quantity'], $subtotal);
+        $itemIsExtra = $hasComponents ? 0 : (int)($item['is_extra_flavor'] ?? false);
+
+        $stmt = $conn->prepare("INSERT INTO transaction_details (transaction_id, menu_id, quantity, subtotal, is_extra_flavor) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("iiidi", $transaction_id, $item['menu_id'], $item['quantity'], $subtotal, $itemIsExtra);
         $stmt->execute();
         $detail_id = $stmt->insert_id;
 
@@ -141,8 +142,10 @@ try {
                 $gramsUsed = $mixRow['grams_required'] * $item['quantity'];
                 deductStock($conn, $mixRow['base_material_id'], $gramsUsed);
 
-                $stmt = $conn->prepare("INSERT INTO mix_components (transactionDetail_id, snack_type, grams_used, flavor_material_id, is_extra_flavor) VALUES (?, ?, ?, NULL, 0)");
-                $stmt->bind_param("isd", $detail_id, $comp['snack_type'], $gramsUsed);
+                $compIsExtra = (int)($comp['is_extra_flavor'] ?? false);
+
+                $stmt = $conn->prepare("INSERT INTO mix_components (transactionDetail_id, snack_type, grams_used, is_extra_flavor) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("isdi", $detail_id, $comp['snack_type'], $gramsUsed, $compIsExtra);
                 $stmt->execute();
                 $component_id = $stmt->insert_id;
 
@@ -198,14 +201,16 @@ function getSizeFlavorInfo($conn, $size_name) {
     return $row;
 }
 
-
+// "No Flavor" (empty array) is always valid regardless of max_flavors.
+// Anything above max_flavors for that size is rejected.
 function validateFlavorCount($flavors, $max_flavors) {
     if (count($flavors) > $max_flavors) {
         throw new Exception("Too many flavors selected (max {$max_flavors} for this size)");
     }
 }
 
-
+// Total grams for the size (+4.75 if extra flavor add-on) split evenly
+// across however many flavors were chosen.
 function computeGramsPerFlavor($baseGrams, $isExtra, $flavorCount) {
     if ($flavorCount === 0) {
         return 0;
