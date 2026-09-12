@@ -36,23 +36,8 @@
         <h1>Inventory Maintenance</h1>
     </div>
 
-    <table id="inventoryTable">
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Unit</th>
-                <th>Current stock</th>
-                <th>Threshold</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody id="inventoryBody">
-            <!-- rows inserted by JS -->
-        </tbody>
-    </table>
-
-    <div class="adjustment-form">
-        <p class="form-label">Record delivery / adjustment</p>
+    <div class="dashboard-section" style="margin-top:20px; margin-bottom:20px;">
+        <h2>Record delivery / adjustment</h2>
         <div class="form-row">
             <select id="materialSelect"></select>
             <input type="number" id="quantityInput" placeholder="Quantity" step="0.01">
@@ -63,6 +48,29 @@
             <button id="saveAdjustmentBtn">Save adjustment</button>
         </div>
         <p id="adjustmentMsg" class="error-text"></p>
+    </div>
+
+    <div class="dashboard-section">
+        <div class="panel-header">
+            <h2>Raw materials</h2>
+            <input type="text" id="inventorySearch" placeholder="Search materials" class="search-input">
+        </div>
+        <table id="inventoryTable">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Unit</th>
+                    <th>Current stock</th>
+                    <th>Threshold</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryBody">
+                <!-- rows inserted by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
     </div>
 </div>
 

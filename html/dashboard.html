@@ -32,7 +32,21 @@
         </div>
         <div class="page-content">
             <h1>Manager Dashboard</h1>
-            <p>(build out stock cards, alerts, etc. here next)</p>
+
+            <div class="dashboard-stats" id="dashboardStats"></div>
+
+            <div class="dashboard-section">
+                <h2>Stock alerts</h2>
+                <table id="lowStockTable">
+                    <thead>
+                        <tr><th>Material</th><th>Current stock</th><th>Threshold</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="lowStockBody"></tbody>
+                </table>
+                <p id="noLowStockMsg" class="form-label" style="display:none; margin-top:8px;">
+                    All materials are sufficiently stocked.
+                </p>
+            </div>
         </div>
     </div>
 </div>

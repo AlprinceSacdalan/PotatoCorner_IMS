@@ -13,19 +13,32 @@ async function loadInventory() {
     if (!result.success) return;
 
     materialsCache = result.data;
+    renderInventoryRows(materialsCache);
+
+    const select = document.getElementById('materialSelect');
+    select.innerHTML = '<option value="">Select item</option>';
+    materialsCache.forEach(item => {
+        select.innerHTML += `<option value="${item.material_id}">${item.name}</option>`;
+    });
+}
+
+function renderInventoryRows(items) {
     const tbody = document.getElementById('inventoryBody');
     tbody.innerHTML = '';
 
-    materialsCache.forEach(item => {
+    items.forEach(item => {
         const badgeClass = item.status === 'low' ? 'status-low'
                           : item.status === 'watch' ? 'status-watch'
                           : 'status-ok';
         const badgeLabel = item.status === 'low' ? 'Low'
                           : item.status === 'watch' ? 'Watch'
                           : 'Ok';
+        const rowClass = item.status === 'low' ? 'row-low'
+                        : item.status === 'watch' ? 'row-watch'
+                        : '';
 
         tbody.innerHTML += `
-            <tr>
+            <tr class="${rowClass}">
                 <td>${item.name}</td>
                 <td>${item.unit}</td>
                 <td>${item.current_stock}</td>
@@ -34,13 +47,12 @@ async function loadInventory() {
             </tr>
         `;
     });
-
-    const select = document.getElementById('materialSelect');
-    select.innerHTML = '<option value="">Select item</option>';
-    materialsCache.forEach(item => {
-        select.innerHTML += `<option value="${item.material_id}">${item.name}</option>`;
-    });
 }
+
+document.getElementById('inventorySearch').addEventListener('input', function(e) {
+    const term = e.target.value.toLowerCase();
+    renderInventoryRows(materialsCache.filter(item => item.name.toLowerCase().includes(term)));
+});
 
 document.getElementById('saveAdjustmentBtn').addEventListener('click', async function() {
     const material_id = document.getElementById('materialSelect').value;
