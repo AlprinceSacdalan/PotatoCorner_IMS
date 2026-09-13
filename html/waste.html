@@ -24,7 +24,35 @@
         <div class="topbar"><span id="welcomeMsg"></span><button id="logoutBtn">Log out</button></div>
         <div class="page-content">
             <h1>Waste Log</h1>
-            <p>Coming soon</p>
+
+            <div class="dashboard-section">
+                <h2>Log wasted material</h2>
+                <div class="form-row">
+                    <select id="wasteMaterialSelect"></select>
+                    <input type="number" id="wasteQuantity" placeholder="Quantity" step="0.01">
+                    <select id="wasteReasonSelect">
+                        <option value="">Select reason</option>
+                        <option value="Spoiled">Spoiled</option>
+                        <option value="Dropped/Contaminated">Dropped/Contaminated</option>
+                        <option value="Expired">Expired</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="wasteReasonOther" placeholder="Specify reason" style="display:none;">
+                    <button id="saveWasteBtn" class="btn-primary">Log waste</button>
+                </div>
+                <p id="wasteMsg" class="error-text"></p>
+            </div>
+
+            <div class="dashboard-section" style="margin-top:20px;">
+                <h2>Waste history</h2>
+                <table id="wasteTable">
+                    <thead>
+                        <tr><th>Material</th><th>Quantity</th><th>Reason</th><th>Logged by</th><th>Date/Time</th></tr>
+                    </thead>
+                    <tbody id="wasteBody"></tbody>
+                </table>
+                <p id="noWasteMsg" class="form-label" style="display:none; margin-top:8px;">No waste logged yet.</p>
+            </div>
         </div>
     </div>
 </div>
