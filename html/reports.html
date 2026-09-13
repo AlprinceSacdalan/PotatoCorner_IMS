@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Sales & Reports</title>
 <link rel="stylesheet" href="/PotatoCorner_IMS/css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 <body>
 <div class="app-layout">
@@ -24,6 +25,43 @@
         <div class="topbar"><span id="welcomeMsg"></span><button id="logoutBtn">Log out</button></div>
         <div class="page-content">
             <h1>Sales & Reports</h1>
+
+            <div class="report-filter-tabs" id="reportFilterTabs">
+                <button class="filter-tab active" data-range="today">Today</button>
+                <button class="filter-tab" data-range="week">This week</button>
+                <button class="filter-tab" data-range="month">This month</button>
+            </div>
+
+            <div class="dashboard-stats" id="reportStats"></div>
+
+            <div class="dashboard-section" style="margin-top:20px;">
+                <h2>Sales over time</h2>
+                <canvas id="salesChart" height="80"></canvas>
+            </div>
+
+            <div class="dashboard-section" style="margin-top:20px;">
+                <h2>Best-selling items</h2>
+                <table id="bestSellersTable">
+                    <thead>
+                        <tr><th>Item</th><th>Quantity sold</th><th>Revenue</th></tr>
+                    </thead>
+                    <tbody id="bestSellersBody"></tbody>
+                </table>
+                <p id="noSalesMsg" class="form-label" style="display:none; margin-top:8px;">No sales in this period yet.</p>
+            </div>
+
+            <div class="dashboard-section" style="margin-top:20px;">
+                <div class="panel-header">
+                    <h2>Transaction history</h2>
+                    <input type="text" id="transactionSearch" placeholder="Search by cashier or ID" class="search-input">
+                </div>
+                <table id="transactionsTable">
+                    <thead>
+                        <tr><th>Transaction #</th><th>Date/Time</th><th>Cashier</th><th>Items</th><th>Total</th></tr>
+                    </thead>
+                    <tbody id="transactionsBody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

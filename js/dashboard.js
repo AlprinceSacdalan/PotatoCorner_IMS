@@ -6,12 +6,18 @@ document.getElementById('logoutBtn').addEventListener('click', function() {
 });
 
 async function loadDashboard() {
-    const [inventoryRes, menuRes] = await Promise.all([
+    const [inventoryRes, menuRes, salesRes] = await Promise.all([
         fetch(`${API_BASE}/inventory/get_inventory.php`),
-        fetch(`${API_BASE}/menu/get_menu.php`)
+        fetch(`${API_BASE}/menu/get_menu.php`),
+        fetch(`${API_BASE}/reports/get_sales_report.php?range=today`)
     ]);
     const inventoryResult = await inventoryRes.json();
     const menuResult = await menuRes.json();
+    const salesResult = await salesRes.json();
+
+    if (salesResult.success) {
+        renderSalesStats(salesResult.data.summary);
+    }
 
     if (!inventoryResult.success) return;
 
@@ -26,6 +32,21 @@ async function loadDashboard() {
 
     renderStats({ totalCount, lowCount, watchCount, menuCount });
     renderAlerts(materials.filter(m => m.status === 'low' || m.status === 'watch'));
+}
+
+function renderSalesStats(summary) {
+    const stats = [
+        { label: "Today's revenue", value: `₱${Number(summary.total_revenue).toFixed(2)}`, variant: 'neutral' },
+        { label: "Today's transactions", value: summary.total_transactions, variant: 'neutral' },
+        { label: 'Average order value', value: `₱${Number(summary.avg_order_value).toFixed(2)}`, variant: 'neutral' }
+    ];
+
+    document.getElementById('salesStats').innerHTML = stats.map(s => `
+        <div class="stat-card stat-card-${s.variant}">
+            <div class="stat-card-value">${s.value}</div>
+            <div class="stat-card-label">${s.label}</div>
+        </div>
+    `).join('');
 }
 
 function renderStats({ totalCount, lowCount, watchCount, menuCount }) {
