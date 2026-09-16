@@ -23,10 +23,61 @@
     <div class="main-content">
         <div class="topbar"><span id="welcomeMsg"></span><button id="logoutBtn">Log out</button></div>
         <div class="page-content">
-            <h1>Staff Accounts</h1>
+            <div class="panel-header">
+                <h1>Staff Accounts</h1>
+                <button id="addUserBtn" class="btn-primary">+ Add account</button>
+            </div>
+
+            <div class="dashboard-section">
+                <table id="usersTable">
+                    <thead>
+                        <tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="usersBody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Add / Edit account modal -->
+<div id="userModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <h2 id="userModalTitle">Add account</h2>
+        <div class="form-row" style="margin-top:1rem; flex-direction:column; align-items:stretch;">
+            <input type="text" id="userFirstName" placeholder="First name">
+            <input type="text" id="userLastName" placeholder="Last name" style="margin-top:8px;">
+            <input type="text" id="userUsername" placeholder="Username" style="margin-top:8px;">
+            <select id="userRole" style="margin-top:8px;">
+                <option value="staff">Staff</option>
+                <option value="manager">Manager</option>
+            </select>
+            <input type="password" id="userPassword" placeholder="Password" style="margin-top:8px;">
+        </div>
+        <p id="userModalError" class="error-text"></p>
+        <div class="modal-actions">
+            <button id="cancelUserBtn">Cancel</button>
+            <button id="saveUserBtn">Save account</button>
+        </div>
+    </div>
+</div>
+
+<!-- Reset password modal -->
+<div id="resetPasswordModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <h2>Reset password</h2>
+        <p class="form-label" id="resetPasswordFor"></p>
+        <div class="form-row" style="margin-top:0.5rem;">
+            <input type="password" id="newPasswordInput" placeholder="New password (min 6 characters)">
+        </div>
+        <p id="resetPasswordError" class="error-text"></p>
+        <div class="modal-actions">
+            <button id="cancelResetBtn">Cancel</button>
+            <button id="confirmResetBtn">Reset password</button>
+        </div>
+    </div>
+</div>
+
 <script src="/PotatoCorner_IMS/js/config.js"></script>
 <script src="/PotatoCorner_IMS/js/auth-guard.js"></script>
 <script src="/PotatoCorner_IMS/js/staff.js"></script>
