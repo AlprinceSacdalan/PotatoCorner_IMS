@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Manila');
 require '../helpers/response.php';
 require '../config/db_config.php';
 

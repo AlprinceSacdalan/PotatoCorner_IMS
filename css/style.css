@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
+/* ============================================================
+   POTATO CORNER IMS — theme tokens
+   Green + gold are the brand's real signature colors.
+   Cream/kraft tones nod to the paper fry-bag/cup itself.
+   ============================================================ */
 :root {
     --pc-green: #1B4D2E;
     --pc-green-dark: #123822;
@@ -16,7 +21,7 @@
     --font-body: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 
-/*  Reset & base  */
+/* ===== Reset & base ===== */
 * {
     margin: 0;
     padding: 0;
@@ -35,7 +40,7 @@ h1, h2, h3, h4 {
     color: var(--pc-ink);
 }
 
-/*  Login page  */
+/* ===== Login page ===== */
 .login-page {
     min-height: 100vh;
     display: flex;
@@ -112,7 +117,8 @@ h1, h2, h3, h4 {
     margin-bottom: 4px;
 }
 
-/*  Dashboard topbar  */
+
+/* ===== Dashboard topbar ===== */
 .topbar {
     display: flex;
     justify-content: flex-end;
@@ -122,32 +128,32 @@ h1, h2, h3, h4 {
     background: #ffffff;
     border-bottom: 1px solid var(--pc-kraft);
 }
- 
+
 .topbar #welcomeMsg {
     font-size: 14px;
     color: var(--pc-ink-soft);
 }
- 
+
 .topbar button {
     padding: 8px 16px;
-    background: rgb(238, 113, 113);
+    background: rgb(230, 107, 107);
     border: 1.5px solid var(--pc-kraft);
     border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
     font-family: var(--font-body);
 }
- 
+
 .topbar button:hover {
     background: var(--pc-kraft);
 }
 
-/*  Sidebar layout  */
+/* ===== Sidebar layout ===== */
 .app-layout {
     display: flex;
     min-height: 100vh;
 }
- 
+
 .sidebar {
     width: 220px;
     background: #ffffff;
@@ -155,7 +161,7 @@ h1, h2, h3, h4 {
     padding: 1.5rem 0;
     flex-shrink: 0;
 }
- 
+
 .sidebar .brand {
     display: flex;
     align-items: center;
@@ -166,13 +172,13 @@ h1, h2, h3, h4 {
     font-size: 15px;
     color: var(--pc-green);
 }
- 
+
 .sidebar .brand img {
     width: 32px;
     height: 32px;
     border-radius: 50%;
 }
- 
+
 .sidebar nav a {
     display: block;
     padding: 10px 1.25rem;
@@ -181,52 +187,52 @@ h1, h2, h3, h4 {
     font-size: 14px;
     border-left: 3px solid transparent;
 }
- 
+
 .sidebar nav a:hover {
     background: var(--pc-green-light);
 }
- 
+
 .sidebar nav a.active {
     background: var(--pc-green-light);
     border-left-color: var(--pc-green);
     color: var(--pc-green);
     font-weight: 600;
 }
- 
+
 .main-content {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-/*  Cards & stats  */
+/* ===== Cards & stats ===== */
 .stat-card {
     background: #fff;
     border-radius: 14px;
     padding: 1rem;
     border: 1px solid var(--pc-kraft);
 }
- 
+
 .dashboard-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 16px;
     margin: 0 0 2rem;
 }
- 
+
 .dashboard-subheading {
     font-size: 15px;
     color: var(--pc-ink-soft);
     margin: 1.25rem 0 0.75rem;
 }
- 
+
 .stat-card {
     border-left: 4px solid var(--pc-kraft);
 }
 .stat-card-neutral { border-left-color: var(--pc-green); }
 .stat-card-low { border-left-color: var(--pc-red); }
 .stat-card-watch { border-left-color: var(--pc-gold); }
- 
+
 .stat-card-value {
     font-family: var(--font-display);
     font-size: 32px;
@@ -234,25 +240,25 @@ h1, h2, h3, h4 {
     color: var(--pc-ink);
     line-height: 1;
 }
- 
+
 .stat-card-label {
     font-size: 13px;
     color: var(--pc-ink-soft);
     margin-top: 6px;
 }
- 
+
 .dashboard-section {
     background: #fff;
     border: 1px solid var(--pc-kraft);
     border-radius: 14px;
     padding: 1.25rem;
 }
- 
+
 .dashboard-section h2 {
     font-size: 17px;
     margin-bottom: 12px;
 }
- 
+
 .search-input {
     padding: 8px 12px;
     border: 1.5px solid var(--pc-kraft);
@@ -265,10 +271,41 @@ h1, h2, h3, h4 {
     outline: none;
     border-color: var(--pc-green);
 }
- 
+
 tr.row-low { background: var(--pc-red-light); }
 tr.row-watch { background: #FEF2D9; }
- 
+
+.btn-small {
+    padding: 5px 12px;
+    font-size: 12px;
+}
+
+.reorder-subtotal {
+    color: var(--pc-ink-soft);
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+/* Print / save-as-PDF view: strip the app chrome, keep the list */
+.print-only { display: none; }
+
+@media print {
+    .sidebar, .topbar, .no-print { display: none !important; }
+    .print-only { display: block; }
+    body { background: #fff; }
+    .page-content { padding: 0; }
+    .print-header { margin-bottom: 16px; }
+    .print-header h2 { font-size: 20px; }
+    .print-header p { font-size: 12px; color: #555; }
+    .dashboard-section {
+        border: none;
+        padding: 0;
+        break-inside: avoid;
+    }
+    table { font-size: 12px; }
+    th, td { border-bottom: 1px solid #ccc; }
+}
+
 .report-filter-tabs {
     display: flex;
     gap: 8px;
@@ -294,7 +331,7 @@ tr.row-watch { background: #FEF2D9; }
     color: #fff;
 }
 
-/*  Tables  */
+/* ===== Tables ===== */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -310,8 +347,8 @@ th {
     color: var(--pc-ink-soft);
     font-weight: 600;
 }
- 
-/*  Status badges  */
+
+/* ===== Status badges ===== */
 .status-ok {
     background: var(--pc-green-light);
     color: var(--pc-green);
@@ -336,51 +373,51 @@ th {
     font-size: 12px;
     font-weight: 600;
 }
- 
-/*  Buttons (general) */
+
+/* ===== Buttons (general) ===== */
 button {
     font-family: inherit;
 }
- 
-/* Responsive (staff mobile pages)  */
+
+/* ===== Responsive (staff mobile pages) ===== */
 @media (max-width: 768px) {
     .login-box { max-width: 90%; }
     table { font-size: 12px; }
 }
- /* Inventory page  */
+
 .page-content {
     padding: 24px;
 }
- 
+
 .page-content h1 {
     font-size: 26px;
     margin-bottom: 4px;
 }
- 
+
 .page-header {
     margin-bottom: 1rem;
 }
- 
+
 .adjustment-form {
     margin-top: 1.5rem;
     padding-top: 1rem;
     border-top: 1px solid var(--pc-kraft);
 }
- 
+
 .form-label {
     font-size: 13px;
     color: var(--pc-ink-soft);
     margin-bottom: 8px;
     font-weight: 600;
 }
- 
+
 .form-row {
     display: flex;
     gap: 8px;
     align-items: center;
     flex-wrap: wrap;
 }
- 
+
 .form-row select, .form-row input {
     padding: 8px;
     border: 1.5px solid var(--pc-kraft);
@@ -400,21 +437,21 @@ button {
 .form-row button:hover {
     background: var(--pc-green-dark);
 }
-/*  Menu/BOM page  */
+
 .menu-bom-layout {
     display: grid;
     grid-template-columns: 1fr 1.4fr;
     gap: 20px;
     margin-top: 1rem;
 }
- 
+
 .menu-list-panel, .recipe-panel {
     background: #fff;
     border: 1px solid var(--pc-kraft);
     border-radius: 14px;
     padding: 1.25rem;
 }
- 
+
 .btn-primary {
     padding: 8px 16px;
     background: var(--pc-green);
@@ -430,55 +467,55 @@ button {
 .btn-primary:hover {
     background: var(--pc-green-dark);
 }
- 
+
 .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
 }
- 
+
 .menu-item-list {
     border: 1px solid var(--pc-kraft);
     border-radius: 12px;
     overflow: hidden;
 }
- 
+
 .menu-item-row {
     padding: 10px 12px;
     font-size: 13px;
     cursor: pointer;
     border-top: 1px solid var(--pc-kraft);
 }
- 
+
 .menu-item-row:first-child {
     border-top: none;
 }
- 
+
 .menu-item-row:hover {
     background: var(--pc-cream);
 }
- 
+
 .menu-item-row.selected {
     background: var(--pc-green-light);
 }
- 
+
 .menu-item-row-managed {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
 }
- 
+
 .menu-item-row-label {
     flex: 1;
     cursor: pointer;
 }
- 
+
 .menu-item-row.unavailable .menu-item-row-label {
     color: var(--pc-ink-soft);
 }
- 
+
 .status-badge-unavailable {
     display: inline-block;
     margin-left: 8px;
@@ -489,13 +526,13 @@ button {
     font-size: 11px;
     font-weight: 600;
 }
- 
+
 .menu-item-row-actions {
     display: flex;
     gap: 4px;
     flex-shrink: 0;
 }
- 
+
 .row-icon-btn {
     border: 1.5px solid var(--pc-kraft);
     background: #fff;
@@ -510,7 +547,7 @@ button {
     border-color: var(--pc-green);
     color: var(--pc-green);
 }
- 
+
 .recipe-qty-input {
     width: 80px;
     padding: 4px 6px;
@@ -519,18 +556,18 @@ button {
     font-size: 13px;
     font-family: var(--font-body);
 }
- 
+
 .recipe-qty-unit {
     font-size: 12px;
     color: var(--pc-ink-soft);
     margin-left: 4px;
 }
- 
+
 .recipe-row-actions {
     white-space: nowrap;
 }
 
-/*  Staff dashboard nav cards  */
+/* ===== Staff dashboard nav cards ===== */
 .staff-nav {
     display: flex;
     gap: 16px;
@@ -688,14 +725,14 @@ button {
 
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
 }
 
 .menu-card {
     border: 1.5px solid var(--pc-kraft);
     border-radius: 14px;
-    padding: 12px;
+    padding: 10px;
     font-size: 13px;
     text-align: center;
     cursor: pointer;
@@ -708,10 +745,10 @@ button {
     transform: translateY(-2px);
 }
 
-/* Photo  */
+/* Photo sits in a rounded "cup" cutout, echoing the actual fry cup shape */
 .menu-card-img {
     width: 100%;
-    height: 140px;
+    height: 96px;
     object-fit: cover;
     border-radius: 40% 40% 10px 10px;
     background: var(--pc-green-light);
@@ -730,7 +767,7 @@ button {
     font-size: 13px;
 }
 
-/* Order summary */
+/* Order summary styled as a receipt/ticket */
 .order-summary-panel {
     border: 1.5px dashed var(--pc-kraft);
     border-radius: 14px;

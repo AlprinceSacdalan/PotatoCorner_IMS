@@ -14,11 +14,12 @@ let nextLineId = 1;
 
 const IMG_BASE = '/PotatoCorner_IMS/assets/images/';
 
-
 const MIX_COMPONENT_LIMITS = { Large: 2, Mega: 2, Tera: 3 };
 
 function getItemImage(item) {
-    if (!item.size_name) return IMG_BASE + 'pc_logo.png';
+    if (!item.size_name) {
+        return `${IMG_BASE}${item.name.replace(/\s+/g, '_')}.jpg`;
+    }
     let suffix = '';
     if (item.name.includes('Chicken Pops')) suffix = '_ChickenPop';
     else if (item.name.includes('Loopy')) suffix = '_Loopy';
@@ -138,6 +139,11 @@ function attachMixCheckboxHandlers(maxComponents) {
 }
 
 async function openItemModal(item) {
+    if (!item.size_name) {
+        addItemToCart(item, { flavors: [], is_extra_flavor: false, noFlavor: true });
+        return;
+    }
+
     currentModalItem = item;
     document.getElementById('flavorModalTitle').textContent = item.name;
     document.getElementById('flavorModalError').textContent = '';
@@ -226,7 +232,7 @@ document.getElementById('flavorModalConfirm').addEventListener('click', () => {
     document.getElementById('flavorModal').classList.add('hidden');
 });
 
-//Cart 
+// Cart 
 
 function addItemToCart(item, config) {
     const signature = JSON.stringify({ menu_id: item.menu_id, ...config });
@@ -254,6 +260,9 @@ function removeFromCart(lineId) {
 }
 
 function describeCartLine(item) {
+    if (item.noFlavor) {
+        return '';
+    }
     if (item.components) {
         return item.components.map(c => {
             const names = c.flavors.length ? c.flavors.map(flavorNameById).join(', ') : 'No Flavor';

@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Reorder List</title>
 <link rel="stylesheet" href="/PotatoCorner_IMS/css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 <div class="app-layout">
@@ -23,7 +25,47 @@
     <div class="main-content">
         <div class="topbar"><span id="welcomeMsg"></span><button id="logoutBtn">Log out</button></div>
         <div class="page-content">
-            <h1>Reorder List</h1>
+            <div class="panel-header">
+                <h1>Reorder List</h1>
+                <button id="downloadPdfBtn" class="btn-primary no-print">Download PDF</button>
+            </div>
+
+            <div class="print-only print-header">
+                <h2>Potato Corner — Purchase Order List</h2>
+                <p id="printDate"></p>
+            </div>
+
+            <div class="dashboard-section">
+                <h2>Needs ordering</h2>
+                <table id="reorderTable">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Current stock</th>
+                            <th>Threshold</th>
+                            <th>Order quantity</th>
+                            <th class="no-print">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reorderBody"></tbody>
+                </table>
+                <p id="noReorderMsg" class="form-label" style="display:none; margin-top:8px;">
+                    Nothing needs ordering right now.
+                </p>
+            </div>
+
+            <div class="dashboard-section no-print" style="margin-top:20px;">
+                <h2>Order history</h2>
+                <table id="orderHistoryTable">
+                    <thead>
+                        <tr><th>Material</th><th>Ordered</th><th>Status</th><th>Date ordered</th><th>Date received</th></tr>
+                    </thead>
+                    <tbody id="orderHistoryBody"></tbody>
+                </table>
+                <p id="noHistoryMsg" class="form-label" style="display:none; margin-top:8px;">
+                    No orders placed yet.
+                </p>
+            </div>
         </div>
     </div>
 </div>
