@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
-/* ============================================================
-   POTATO CORNER IMS — theme tokens
-   Green + gold are the brand's real signature colors.
-   Cream/kraft tones nod to the paper fry-bag/cup itself.
-   ============================================================ */
+/* Colors and Fonts */
 :root {
     --pc-green: #1B4D2E;
     --pc-green-dark: #123822;
@@ -21,7 +17,7 @@
     --font-body: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 
-/* ===== Reset & base ===== */
+/*  Reset & base  */
 * {
     margin: 0;
     padding: 0;
@@ -40,7 +36,7 @@ h1, h2, h3, h4 {
     color: var(--pc-ink);
 }
 
-/* ===== Login page ===== */
+/*  Login page  */
 .login-page {
     min-height: 100vh;
     display: flex;
@@ -117,8 +113,7 @@ h1, h2, h3, h4 {
     margin-bottom: 4px;
 }
 
-
-/* ===== Dashboard topbar ===== */
+/*  Dashboard topbar  */
 .topbar {
     display: flex;
     justify-content: flex-end;
@@ -136,7 +131,7 @@ h1, h2, h3, h4 {
 
 .topbar button {
     padding: 8px 16px;
-    background: rgb(230, 107, 107);
+    background: rgb(252, 96, 96);
     border: 1.5px solid var(--pc-kraft);
     border-radius: 8px;
     cursor: pointer;
@@ -148,7 +143,7 @@ h1, h2, h3, h4 {
     background: var(--pc-kraft);
 }
 
-/* ===== Sidebar layout ===== */
+/* Sidebar layout  */
 .app-layout {
     display: flex;
     min-height: 100vh;
@@ -205,7 +200,7 @@ h1, h2, h3, h4 {
     flex-direction: column;
 }
 
-/* ===== Cards & stats ===== */
+/*  Cards & stats */
 .stat-card {
     background: #fff;
     border-radius: 14px;
@@ -229,9 +224,18 @@ h1, h2, h3, h4 {
 .stat-card {
     border-left: 4px solid var(--pc-kraft);
 }
-.stat-card-neutral { border-left-color: var(--pc-green); }
-.stat-card-low { border-left-color: var(--pc-red); }
-.stat-card-watch { border-left-color: var(--pc-gold); }
+
+.stat-card-neutral { 
+    border-left-color: var(--pc-green); 
+}
+
+.stat-card-low { 
+    border-left-color: var(--pc-red); 
+}
+
+.stat-card-watch { 
+    border-left-color: var(--pc-gold);
+ }
 
 .stat-card-value {
     font-family: var(--font-display);
@@ -286,7 +290,7 @@ tr.row-watch { background: #FEF2D9; }
     margin-left: 4px;
 }
 
-/* Print / save-as-PDF view: strip the app chrome, keep the list */
+
 .print-only { display: none; }
 
 @media print {
@@ -331,7 +335,7 @@ tr.row-watch { background: #FEF2D9; }
     color: #fff;
 }
 
-/* ===== Tables ===== */
+/*  Tables  */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -348,7 +352,7 @@ th {
     font-weight: 600;
 }
 
-/* ===== Status badges ===== */
+/* Status badges  */
 .status-ok {
     background: var(--pc-green-light);
     color: var(--pc-green);
@@ -374,12 +378,12 @@ th {
     font-weight: 600;
 }
 
-/* ===== Buttons (general) ===== */
+/*  Buttons (general) */
 button {
     font-family: inherit;
 }
 
-/* ===== Responsive (staff mobile pages) ===== */
+/*  Responsive (staff mobile pages) */
 @media (max-width: 768px) {
     .login-box { max-width: 90%; }
     table { font-size: 12px; }
@@ -567,7 +571,7 @@ button {
     white-space: nowrap;
 }
 
-/* ===== Staff dashboard nav cards ===== */
+/*  Staff dashboard nav cards */
 .staff-nav {
     display: flex;
     gap: 16px;
@@ -607,7 +611,7 @@ button {
     .staff-nav-card { max-width: none; flex: 1 1 45%; }
 }
 
-/* ===== Staff topbar ===== */
+/* Staff topbar  */
 .staff-topbar {
     display: flex;
     justify-content: space-between;
@@ -698,9 +702,7 @@ button {
     }
 }
 
-/* ============================================================
-   Process Sale
-   ============================================================ */
+/* Process Sale */
 .sale-layout {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
@@ -745,7 +747,7 @@ button {
     transform: translateY(-2px);
 }
 
-/* Photo sits in a rounded "cup" cutout, echoing the actual fry cup shape */
+/* Photo */
 .menu-card-img {
     width: 100%;
     height: 96px;
@@ -855,6 +857,10 @@ button {
 }
 
 .modal-overlay.hidden {
+    display: none;
+}
+
+.hidden {
     display: none;
 }
 

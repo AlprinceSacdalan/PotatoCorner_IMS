@@ -2,14 +2,6 @@
 require '../helpers/response.php';
 require '../config/db_config.php';
 
-
-$conn->query("
-    UPDATE reorder_orders ro
-    JOIN raw_materials rm ON ro.material_id = rm.material_id
-    SET ro.status = 'received', ro.received_date = NOW()
-    WHERE ro.status = 'pending' AND rm.current_stock > rm.threshold
-");
-
 $result = $conn->query("
     SELECT rm.material_id, rm.name, rm.unit, rm.current_stock, rm.threshold,
            mpu.purchase_unit_name, mpu.units_per_purchase, mpu.reorder_purchase_qty,
@@ -30,7 +22,7 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
-// Full order history 
+// Full order history
 $result = $conn->query("
     SELECT ro.reorder_id, rm.name, rm.unit, rm.current_stock,
            ro.purchase_qty, ro.purchase_unit_name, ro.quantity_ordered,

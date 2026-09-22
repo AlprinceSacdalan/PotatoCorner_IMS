@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inventory Maintenance</title>
 <link rel="stylesheet" href="/PotatoCorner_IMS/css/style.css">
 </head>
@@ -36,20 +35,6 @@
         <h1>Inventory Maintenance</h1>
     </div>
 
-    <div class="dashboard-section" style="margin-top:20px; margin-bottom:20px;">
-        <h2>Record delivery / adjustment</h2>
-        <div class="form-row">
-            <select id="materialSelect"></select>
-            <input type="number" id="quantityInput" placeholder="Quantity" step="0.01">
-            <select id="typeSelect">
-                <option value="delivery">Delivery</option>
-                <option value="correction">Correction</option>
-            </select>
-            <button id="saveAdjustmentBtn">Save adjustment</button>
-        </div>
-        <p id="adjustmentMsg" class="error-text"></p>
-    </div>
-
     <div class="dashboard-section">
         <div class="panel-header">
             <h2>Raw materials</h2>
@@ -63,14 +48,29 @@
                     <th>Current stock</th>
                     <th>Threshold</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="inventoryBody">
-                <!-- rows inserted by JS -->
             </tbody>
         </table>
     </div>
 </div>
+    </div>
+</div>
+
+<div id="correctStockModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <h2 id="correctStockTitle">Edit stock</h2>
+        <p class="form-label" id="correctStockCurrent"></p>
+        <div class="form-row" style="margin-top:0.5rem;">
+            <input type="number" id="correctStockInput" step="0.01" placeholder="Correct total">
+        </div>
+        <p id="correctStockError" class="error-text"></p>
+        <div class="modal-actions">
+            <button id="cancelCorrectStockBtn">Cancel</button>
+            <button id="saveCorrectStockBtn">Save</button>
+        </div>
     </div>
 </div>
 

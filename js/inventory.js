@@ -5,6 +5,7 @@ document.getElementById('logoutBtn').addEventListener('click', function() {
 });
 
 let materialsCache = [];
+let correctingMaterial = null;
 
 async function loadInventory() {
     const response = await fetch(`${API_BASE}/inventory/get_inventory.php`);
@@ -14,12 +15,6 @@ async function loadInventory() {
 
     materialsCache = result.data;
     renderInventoryRows(materialsCache);
-
-    const select = document.getElementById('materialSelect');
-    select.innerHTML = '<option value="">Select item</option>';
-    materialsCache.forEach(item => {
-        select.innerHTML += `<option value="${item.material_id}">${item.name}</option>`;
-    });
 }
 
 function renderInventoryRows(items) {
@@ -37,15 +32,18 @@ function renderInventoryRows(items) {
                         : item.status === 'watch' ? 'row-watch'
                         : '';
 
-        tbody.innerHTML += `
-            <tr class="${rowClass}">
-                <td>${item.name}</td>
-                <td>${item.unit}</td>
-                <td>${item.current_stock}</td>
-                <td>${item.threshold}</td>
-                <td><span class="${badgeClass}">${badgeLabel}</span></td>
-            </tr>
+        const tr = document.createElement('tr');
+        tr.className = rowClass;
+        tr.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.unit}</td>
+            <td>${item.current_stock}</td>
+            <td>${item.threshold}</td>
+            <td><span class="${badgeClass}">${badgeLabel}</span></td>
+            <td><button class="row-icon-btn" data-action="edit" title="Correct stock">✎</button></td>
         `;
+        tr.querySelector('[data-action="edit"]').addEventListener('click', () => openCorrectStockModal(item));
+        tbody.appendChild(tr);
     });
 }
 
@@ -54,15 +52,30 @@ document.getElementById('inventorySearch').addEventListener('input', function(e)
     renderInventoryRows(materialsCache.filter(item => item.name.toLowerCase().includes(term)));
 });
 
-document.getElementById('saveAdjustmentBtn').addEventListener('click', async function() {
-    const material_id = document.getElementById('materialSelect').value;
-    const quantity = document.getElementById('quantityInput').value;
-    const adjustment_type = document.getElementById('typeSelect').value;
-    const msg = document.getElementById('adjustmentMsg');
-    msg.textContent = '';
+function openCorrectStockModal(item) {
+    correctingMaterial = item;
+    document.getElementById('correctStockTitle').textContent = `Edit stock — ${item.name}`;
+    document.getElementById('correctStockCurrent').textContent =
+        `Current: ${item.current_stock} ${item.unit}`;
+    document.getElementById('correctStockInput').value = item.current_stock;
+    document.getElementById('correctStockError').textContent = '';
+    document.getElementById('correctStockModal').classList.remove('hidden');
+}
 
-    if (!material_id || !quantity) {
-        msg.textContent = 'Please select an item and enter a quantity.';
+function closeCorrectStockModal() {
+    document.getElementById('correctStockModal').classList.add('hidden');
+    correctingMaterial = null;
+}
+
+document.getElementById('cancelCorrectStockBtn').addEventListener('click', closeCorrectStockModal);
+
+document.getElementById('saveCorrectStockBtn').addEventListener('click', async function() {
+    const errorEl = document.getElementById('correctStockError');
+    errorEl.textContent = '';
+
+    const newTotal = document.getElementById('correctStockInput').value;
+    if (newTotal === '' || Number(newTotal) < 0) {
+        errorEl.textContent = 'Enter a valid quantity.';
         return;
     }
 
@@ -70,19 +83,18 @@ document.getElementById('saveAdjustmentBtn').addEventListener('click', async fun
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            material_id: material_id,
+            material_id: correctingMaterial.material_id,
             user_id: currentUser.user_id,
-            quantity: quantity,
-            adjustment_type: adjustment_type
+            new_total: newTotal
         })
     });
     const result = await response.json();
 
     if (result.success) {
-        document.getElementById('quantityInput').value = '';
+        closeCorrectStockModal();
         loadInventory();
     } else {
-        msg.textContent = result.message;
+        errorEl.textContent = result.message;
     }
 });
 
