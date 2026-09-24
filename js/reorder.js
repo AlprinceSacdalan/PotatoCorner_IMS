@@ -99,8 +99,9 @@ function openOrderReceivedModal(order) {
         `${order.name} — ordered ${Number(order.purchase_qty)} ${order.purchase_unit_name}${Number(order.purchase_qty) > 1 ? 's' : ''} (${Number(order.quantity_ordered).toLocaleString()} ${order.unit})`;
     document.getElementById('orderReceivedStep1').classList.remove('hidden');
     document.getElementById('orderReceivedStep2').classList.add('hidden');
+    document.getElementById('confirmActualQuantityBtn').classList.add('hidden');
     document.getElementById('actualQuantityInput').value = '';
-    document.getElementById('actualQuantityInput').placeholder = `Correct Quantity (${order.unit})`;
+    document.getElementById('actualQuantityInput').placeholder = `Actual quantity received (${order.unit})`;
     document.getElementById('orderReceivedError').textContent = '';
     document.getElementById('orderReceivedModal').classList.remove('hidden');
 }
@@ -127,7 +128,9 @@ async function submitOrderReceived(matchesOrdered, actualQuantity) {
         loadReorderList();
     } else {
         document.getElementById('orderReceivedError').textContent = result.message;
+        document.getElementById('orderReceivedStep1').classList.add('hidden');
         document.getElementById('orderReceivedStep2').classList.remove('hidden');
+        document.getElementById('confirmActualQuantityBtn').classList.remove('hidden');
     }
 }
 
@@ -138,6 +141,7 @@ document.getElementById('orderReceivedYesBtn').addEventListener('click', () => {
 document.getElementById('orderReceivedNoBtn').addEventListener('click', () => {
     document.getElementById('orderReceivedStep1').classList.add('hidden');
     document.getElementById('orderReceivedStep2').classList.remove('hidden');
+    document.getElementById('confirmActualQuantityBtn').classList.remove('hidden');
 });
 
 document.getElementById('cancelOrderReceivedBtn').addEventListener('click', closeOrderReceivedModal);

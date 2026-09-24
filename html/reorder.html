@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reorder List</title>
 <link rel="stylesheet" href="/PotatoCorner_IMS/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -85,10 +86,11 @@
                 <input type="number" id="actualQuantityInput" step="0.01" placeholder="Actual quantity received">
             </div>
             <p id="orderReceivedError" class="error-text"></p>
-            <div class="modal-actions">
-                <button id="cancelOrderReceivedBtn">Cancel</button>
-                <button id="confirmActualQuantityBtn" class="btn-primary">Confirm</button>
-            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button id="cancelOrderReceivedBtn">Cancel</button>
+            <button id="confirmActualQuantityBtn" class="btn-primary hidden">Confirm</button>
         </div>
     </div>
 </div>

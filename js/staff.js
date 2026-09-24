@@ -30,7 +30,7 @@ async function loadUsers() {
         `;
     }).join('');
 
-    // Wire up action buttons (need the full user objects, so re-map by row index)
+    
     const rows = tbody.querySelectorAll('tr');
     result.data.forEach((u, i) => {
         const row = rows[i];
@@ -47,6 +47,8 @@ function openAddModal() {
     document.getElementById('userLastName').value = '';
     document.getElementById('userUsername').value = '';
     document.getElementById('userRole').value = 'staff';
+    document.getElementById('userPhone').value = '';
+    document.getElementById('userReceiveSms').checked = false;
     document.getElementById('userPassword').value = '';
     document.getElementById('userPassword').style.display = 'block';
     document.getElementById('userPassword').placeholder = 'Password';
@@ -61,6 +63,8 @@ function openEditModal(u) {
     document.getElementById('userLastName').value = u.l_name;
     document.getElementById('userUsername').value = u.username;
     document.getElementById('userRole').value = u.role;
+    document.getElementById('userPhone').value = u.phone_number || '';
+    document.getElementById('userReceiveSms').checked = !!Number(u.receive_sms_alerts);
     document.getElementById('userPassword').style.display = 'none'; // password not editable here
     document.getElementById('userModalError').textContent = '';
     document.getElementById('userModal').classList.remove('hidden');
@@ -80,6 +84,8 @@ document.getElementById('saveUserBtn').addEventListener('click', async function(
     const username = document.getElementById('userUsername').value.trim();
     const role = document.getElementById('userRole').value;
     const password = document.getElementById('userPassword').value;
+    const phone_number = document.getElementById('userPhone').value.trim();
+    const receive_sms_alerts = document.getElementById('userReceiveSms').checked;
     const errorEl = document.getElementById('userModalError');
     errorEl.textContent = '';
 
@@ -91,8 +97,12 @@ document.getElementById('saveUserBtn').addEventListener('click', async function(
         errorEl.textContent = 'Password is required for a new account.';
         return;
     }
+    if (receive_sms_alerts && !phone_number) {
+        errorEl.textContent = 'A phone number is required to receive SMS alerts.';
+        return;
+    }
 
-    const payload = { f_name, l_name, username, role };
+    const payload = { f_name, l_name, username, role, phone_number, receive_sms_alerts };
     if (editingUserId) {
         payload.user_id = editingUserId;
     } else {
