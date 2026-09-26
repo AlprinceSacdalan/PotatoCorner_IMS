@@ -1,6 +1,6 @@
 <?php
-date_default_timezone_set('Asia/Manila');
 require '../helpers/response.php';
+require '../helpers/check_low_stock.php';
 require '../config/db_config.php';
 
 const MIX_COMPONENT_MAX_FLAVORS = 1;
@@ -16,7 +16,7 @@ if (!$user_id || !$items || count($items) === 0) {
 $conn->begin_transaction();
 
 try {
-    // Validate stock (and flavor counts) 
+    // validate stock (and flavor counts) 
     foreach ($items as $item) {
         // Base recipe check (existing logic, unchanged)
         $stmt = $conn->prepare("
@@ -37,6 +37,7 @@ try {
 
         $hasComponents = !empty($item['components']);
 
+        // Item-level flavor check 
         if (!$hasComponents && !empty($item['flavors'])) {
             $sizeInfo = getSizeFlavorInfo($conn, getMenuSizeName($conn, $item['menu_id']));
             $flavors = $item['flavors'];
@@ -88,7 +89,7 @@ try {
     $stmt->execute();
     $transaction_id = $stmt->insert_id;
 
-    // Insert rows and deduct stock 
+    // insert rows and deduct stock 
     foreach ($items as $item) {
         $stmt = $conn->prepare("SELECT price FROM menu_items WHERE menu_id = ?");
         $stmt->bind_param("i", $item['menu_id']);
@@ -114,7 +115,7 @@ try {
             deductStock($conn, $ing['material_id'], $ing['quantity_required'] * $item['quantity']);
         }
 
-        // Item-level flavors (non-Mix items only)
+        // Item-level flavors 
         if (!$hasComponents && !empty($item['flavors'])) {
             $sizeInfo = getSizeFlavorInfo($conn, getMenuSizeName($conn, $item['menu_id']));
             $flavors = $item['flavors'];
@@ -169,6 +170,9 @@ try {
     }
 
     $conn->commit();
+
+    checkAndSendLowStockAlerts($conn);
+
     sendResponse(true, 'Sale recorded', ['transaction_id' => $transaction_id, 'total_amount' => $total_amount]);
 
 } catch (Exception $e) {
@@ -190,7 +194,6 @@ function getMenuSizeName($conn, $menu_id) {
     return $row['size_name'];
 }
 
-
 function getSizeFlavorInfo($conn, $size_name) {
     $stmt = $conn->prepare("SELECT grams_per_serving, max_flavors FROM flavor_usage_by_size WHERE size_name = ?");
     $stmt->bind_param("s", $size_name);
@@ -202,16 +205,14 @@ function getSizeFlavorInfo($conn, $size_name) {
     return $row;
 }
 
-// "No Flavor" (empty array) is always valid regardless of max_flavors.
-// Anything above max_flavors for that size is rejected.
+
 function validateFlavorCount($flavors, $max_flavors) {
     if (count($flavors) > $max_flavors) {
         throw new Exception("Too many flavors selected (max {$max_flavors} for this size)");
     }
 }
 
-// Total grams for the size (+4.75 if extra flavor add-on) split evenly
-// across however many flavors were chosen.
+
 function computeGramsPerFlavor($baseGrams, $isExtra, $flavorCount) {
     if ($flavorCount === 0) {
         return 0;

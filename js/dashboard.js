@@ -36,9 +36,9 @@ async function loadDashboard() {
 
 function renderSalesStats(summary) {
     const stats = [
-        { label: "Today's revenue", value: `₱${Number(summary.total_revenue).toFixed(2)}`, variant: 'neutral' },
-        { label: "Today's transactions", value: summary.total_transactions, variant: 'neutral' },
-        { label: 'Average order value', value: `₱${Number(summary.avg_order_value).toFixed(2)}`, variant: 'neutral' }
+        { label: "Today's revenue", value: `₱${Number(summary.total_revenue).toFixed(2)}`, variant: 'revenue' },
+        { label: "Today's transactions", value: summary.total_transactions, variant: 'activity' },
+        { label: 'Average order value', value: `₱${Number(summary.avg_order_value).toFixed(2)}`, variant: 'activity' }
     ];
 
     document.getElementById('salesStats').innerHTML = stats.map(s => `
@@ -51,8 +51,8 @@ function renderSalesStats(summary) {
 
 function renderStats({ totalCount, lowCount, watchCount, menuCount }) {
     const stats = [
-        { label: 'Active menu items', value: menuCount, variant: 'neutral' },
-        { label: 'Raw materials tracked', value: totalCount, variant: 'neutral' },
+        { label: 'Active menu items', value: menuCount, variant: 'menu' },
+        { label: 'Raw materials tracked', value: totalCount, variant: 'inventory' },
         { label: 'Low stock', value: lowCount, variant: 'low' },
         { label: 'Watch', value: watchCount, variant: 'watch' }
     ];

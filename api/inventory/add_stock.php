@@ -26,8 +26,7 @@ try {
         throw new Exception('Material not found');
     }
 
-    // Every edit from this form is a correction — the manager reports what
-    // stock actually is, and we compute the delta ourselves for the audit log.
+
     $delta = $new_total - $row['current_stock'];
     $adjustment_type = 'correction';
 
@@ -38,6 +37,13 @@ try {
     $stmt2 = $conn->prepare("UPDATE raw_materials SET current_stock = ? WHERE material_id = ?");
     $stmt2->bind_param("di", $new_total, $material_id);
     $stmt2->execute();
+
+    $stmt3 = $conn->prepare("
+        UPDATE raw_materials SET low_stock_notified_at = NULL
+        WHERE material_id = ? AND current_stock > threshold
+    ");
+    $stmt3->bind_param("i", $material_id);
+    $stmt3->execute();
 
     $conn->commit();
     sendResponse(true, 'Stock corrected', ['new_total' => $new_total, 'delta' => $delta]);

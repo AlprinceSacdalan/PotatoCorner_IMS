@@ -101,7 +101,7 @@ function openOrderReceivedModal(order) {
     document.getElementById('orderReceivedStep2').classList.add('hidden');
     document.getElementById('confirmActualQuantityBtn').classList.add('hidden');
     document.getElementById('actualQuantityInput').value = '';
-    document.getElementById('actualQuantityInput').placeholder = `Actual quantity received (${order.unit})`;
+    document.getElementById('actualQuantityInput').placeholder = `Quantity Received (${order.unit})`;
     document.getElementById('orderReceivedError').textContent = '';
     document.getElementById('orderReceivedModal').classList.remove('hidden');
 }

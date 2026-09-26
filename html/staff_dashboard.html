@@ -16,7 +16,6 @@
     <nav>
         <a href="/PotatoCorner_IMS/html/staff_dashboard.html" class="active">Dashboard</a>
         <a href="/PotatoCorner_IMS/html/process_sale.html">Process Sale</a>
-        <a href="/PotatoCorner_IMS/html/staff_inventory.html">Inventory</a>
     </nav>
     <div class="user-area">
         <span id="welcomeMsg"></span>
@@ -26,15 +25,31 @@
 
 <div class="page-content">
     <h1>Good day, <span id="firstName"></span></h1>
-    <div class="staff-nav">
-        <a href="/PotatoCorner_IMS/html/process_sale.html" class="staff-nav-card">
-            <span class="card-icon"></span>
-            Process Sale
-        </a>
-        <a href="/PotatoCorner_IMS/html/staff_inventory.html" class="staff-nav-card">
-            <span class="card-icon"></span>
-            View Inventory
-        </a>
+
+    <h2 class="dashboard-subheading">Today's sales</h2>
+    <div class="dashboard-stats" id="salesStats"></div>
+
+    <div class="dashboard-section">
+        <h2>Stock levels</h2>
+        <table id="stockTable">
+            <thead>
+                <tr><th>Item</th><th>Unit</th><th>Current stock</th><th>Threshold</th><th>Status</th></tr>
+            </thead>
+            <tbody id="stockBody"></tbody>
+        </table>
+    </div>
+
+    <div class="dashboard-section" style="margin-top:20px;">
+        <h2>Today's transactions</h2>
+        <table id="transactionsTable">
+            <thead>
+                <tr><th>Transaction #</th><th>Date/Time</th><th>Cashier</th><th>Items</th><th>Total</th></tr>
+            </thead>
+            <tbody id="transactionsBody"></tbody>
+        </table>
+        <p id="noTransactionsMsg" class="form-label" style="display:none; margin-top:8px;">
+            No transactions yet today.
+        </p>
     </div>
 </div>
 

@@ -35,6 +35,13 @@ try {
     $stmt->bind_param("di", $quantityToAdd, $order['material_id']);
     $stmt->execute();
 
+    $stmt4 = $conn->prepare("
+        UPDATE raw_materials SET low_stock_notified_at = NULL
+        WHERE material_id = ? AND current_stock > threshold
+    ");
+    $stmt4->bind_param("i", $order['material_id']);
+    $stmt4->execute();
+
     $stmt = $conn->prepare("
         UPDATE reorder_orders
         SET status = 'received', received_date = NOW(), actual_quantity_received = ?
