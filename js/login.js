@@ -1,3 +1,13 @@
+const passwordInput = document.getElementById('password');
+const togglePasswordButton = document.getElementById('togglePassword');
+
+togglePasswordButton.addEventListener('click', function() {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    this.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    this.setAttribute('title', isHidden ? 'Hide password' : 'Show password');
+});
+
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 

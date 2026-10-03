@@ -17,13 +17,17 @@ async function loadMaterialsDropdown() {
 }
 
 async function loadWasteLog() {
-    const response = await fetch(`${API_BASE}/waste/get_waste_log.php`);
-    const result = await response.json();
-    if (!result.success) return;
-
     const tbody = document.getElementById('wasteBody');
     const table = document.getElementById('wasteTable');
     const noMsg = document.getElementById('noWasteMsg');
+
+    table.style.display = 'table';
+    noMsg.style.display = 'none';
+    tbody.innerHTML = `<tr><td colspan="5">${renderInlineLoading('Loading waste history...')}</td></tr>`;
+
+    const response = await fetch(`${API_BASE}/waste/get_waste_log.php`);
+    const result = await response.json();
+    if (!result.success) return;
 
     if (result.data.length === 0) {
         table.style.display = 'none';
@@ -49,6 +53,7 @@ document.getElementById('wasteReasonSelect').addEventListener('change', function
 });
 
 document.getElementById('saveWasteBtn').addEventListener('click', async function() {
+    const saveButton = this;
     const material_id = document.getElementById('wasteMaterialSelect').value;
     const quantity_wasted = document.getElementById('wasteQuantity').value;
     const reasonChoice = document.getElementById('wasteReasonSelect').value;
@@ -67,26 +72,46 @@ document.getElementById('saveWasteBtn').addEventListener('click', async function
 
     const reason = reasonChoice === 'Other' ? `Other: ${reasonOther}` : reasonChoice;
 
-    const response = await fetch(`${API_BASE}/waste/save_waste.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            material_id,
-            user_id: currentUser.user_id,
-            quantity_wasted,
-            reason
-        })
-    });
-    const result = await response.json();
+    const materialName = document.getElementById('wasteMaterialSelect').selectedOptions[0].textContent;
+    const confirmationMessage = `Log ${quantity_wasted} units of ${materialName} as waste for "${reason}"?`;
+    const confirmed = typeof confirmAction === 'function'
+        ? await confirmAction(confirmationMessage, 'Confirm waste entry')
+        : window.confirm(confirmationMessage);
+    if (!confirmed) return;
 
-    if (result.success) {
-        document.getElementById('wasteQuantity').value = '';
-        document.getElementById('wasteReasonSelect').value = '';
-        document.getElementById('wasteReasonOther').value = '';
-        document.getElementById('wasteReasonOther').style.display = 'none';
-        loadWasteLog();
-    } else {
-        msg.textContent = result.message;
+    saveButton.disabled = true;
+    showLoading('Logging waste...');
+    try {
+        const response = await fetch(`${API_BASE}/waste/save_waste.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                material_id,
+                user_id: currentUser.user_id,
+                quantity_wasted,
+                reason
+            })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            document.getElementById('wasteQuantity').value = '';
+            document.getElementById('wasteReasonSelect').value = '';
+            document.getElementById('wasteReasonOther').value = '';
+            document.getElementById('wasteReasonOther').style.display = 'none';
+            msg.textContent = '';
+            showToast('Waste entry saved successfully.');
+            await loadWasteLog();
+        } else {
+            msg.textContent = result.message;
+            showToast(result.message, 'error');
+        }
+    } catch (error) {
+        msg.textContent = 'Unable to save the waste entry right now.';
+        showToast('Unable to save the waste entry right now.', 'error');
+    } finally {
+        hideLoading();
+        saveButton.disabled = false;
     }
 });
 

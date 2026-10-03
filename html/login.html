@@ -13,8 +13,25 @@
         <img src="/PotatoCorner_IMS/assets/images/pc_logo.png" alt="Potato Corner" class="login-logo">
         <h2>Potato Corner Inventory System</h2>
         <form id="loginForm" autocomplete="off">
-            <input type="text" id="username" name="username" placeholder="Username" autocomplete="off" required>
-            <input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" required>
+            <div class="login-input-wrap">
+                <svg class="login-input-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 21a8 8 0 0 0-16 0M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+                </svg>
+                <input type="text" id="username" name="username" placeholder="Username" autocomplete="off" required>
+            </div>
+            <div class="login-input-wrap">
+                <svg class="login-input-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="4" y="10" width="16" height="11" rx="2"></rect>
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"></path>
+                </svg>
+                <input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" required>
+                <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password" title="Show password">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+                        <circle cx="12" cy="12" r="2.5"></circle>
+                    </svg>
+                </button>
+            </div>
             <p id="errorMsg" class="error-text"></p>
             <button type="submit">Log in</button>
         </form>

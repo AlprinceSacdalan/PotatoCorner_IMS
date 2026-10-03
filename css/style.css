@@ -34,6 +34,7 @@ body {
     background: var(--pc-cream);
     color: var(--pc-ink);
     line-height: 1.5;
+    overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
@@ -44,6 +45,11 @@ h1, h2, h3, h4 {
 
 button, input, select {
     font: inherit;
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: 0.65;
 }
 
 :focus-visible {
@@ -86,15 +92,69 @@ button, input, select {
     color: var(--pc-ink);
 }
 
+.login-input-wrap {
+    position: relative;
+    margin-bottom: 14px;
+}
+
 .login-box input {
     width: 100%;
     padding: 14px 16px;
-    margin-bottom: 14px;
+    padding-left: 46px;
     border: 1.5px solid var(--pc-kraft);
     border-radius: 10px;
     font-size: 15px;
     font-family: var(--font-body);
     background: var(--pc-cream);
+}
+
+.login-input-icon {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: 18px;
+    height: 18px;
+    transform: translateY(-50%);
+    fill: none;
+    stroke: var(--pc-ink-soft);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+    pointer-events: none;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    border: none;
+    background: transparent;
+    color: var(--pc-ink-soft);
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.password-toggle:hover {
+    color: var(--pc-green);
+}
+
+.password-toggle svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+}
+
+.login-input-wrap:focus-within .login-input-icon {
+    stroke: var(--pc-green);
 }
 
 .login-box input:focus {
@@ -103,7 +163,11 @@ button, input, select {
     background: #fff;
 }
 
-.login-box button {
+.login-input-wrap input[type="password"] {
+    padding-right: 50px;
+}
+
+.login-box form > button[type="submit"] {
     width: 100%;
     padding: 15px;
     background: var(--pc-gold);
@@ -118,7 +182,7 @@ button, input, select {
     transition: background 0.15s ease;
 }
 
-.login-box button:hover {
+.login-box form > button[type="submit"]:hover {
     background: var(--pc-gold-dark);
 }
 
@@ -216,6 +280,8 @@ button, input, select {
 
 .main-content {
     flex: 1;
+    min-width: 0;
+    width: 0;
     display: flex;
     flex-direction: column;
 }
@@ -231,6 +297,8 @@ button, input, select {
 
 .dashboard-stats {
     display: grid;
+    width: 100%;
+    min-width: 0;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 16px;
     margin: 0 0 2rem;
@@ -319,8 +387,13 @@ button, input, select {
     border-color: var(--pc-green);
 }
 
-tr.row-low { background: var(--pc-red-light); }
-tr.row-watch { background: #FEF2D9; }
+tr.row-low { 
+    background: var(--pc-red-light);
+ }
+
+tr.row-watch { 
+    background: #FEF2D9;
+ }
 
 .btn-small {
     padding: 5px 12px;
@@ -337,20 +410,46 @@ tr.row-watch { background: #FEF2D9; }
 .print-only { display: none; }
 
 @media print {
-    .sidebar, .topbar, .no-print { display: none !important; }
-    .print-only { display: block; }
-    body { background: #fff; }
-    .page-content { padding: 0; }
-    .print-header { margin-bottom: 16px; }
-    .print-header h2 { font-size: 20px; }
-    .print-header p { font-size: 12px; color: #555; }
+    .sidebar, .topbar, .no-print { 
+        display: none !important; 
+    }
+
+    .print-only {
+        display: block;
+    }
+
+    body { 
+        background: #fff; 
+    }
+
+    .page-content {
+        padding: 0; 
+    }
+
+    .print-header {
+        margin-bottom: 16px; 
+    }
+
+    .print-header h2 { 
+        font-size: 20px;
+    }
+    .print-header p { 
+        font-size: 12px; color: #555; 
+    }
+
     .dashboard-section {
         border: none;
         padding: 0;
         break-inside: avoid;
     }
-    table { font-size: 12px; }
-    th, td { border-bottom: 1px solid #ccc; }
+    
+    table { 
+        font-size: 12px; 
+    }
+
+    th, td { 
+        border-bottom: 1px solid #ccc; 
+    }
 }
 
 .report-filter-tabs {
@@ -477,7 +576,7 @@ button {
 
 .page-content {
     width: 100%;
-    max-width: 1440px;
+    max-width: none;
     padding: 30px 32px;
 }
 
@@ -964,6 +1063,152 @@ button {
     box-shadow: 0 20px 50px rgba(0,0,0,0.25);
 }
 
+/* Shared feedback and confirmation UI */
+.ui-loading-overlay,
+.ui-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    background: rgba(43, 33, 26, 0.42);
+}
+
+.ui-loading-overlay.hidden,
+.ui-confirm-overlay.hidden {
+    display: none;
+}
+
+.ui-loading-card,
+.ui-confirm-card {
+    width: min(90%, 380px);
+    padding: 24px;
+    background: var(--pc-surface);
+    border: 1px solid var(--pc-kraft);
+    border-radius: var(--radius-md);
+    box-shadow: var(--pc-shadow-strong);
+    text-align: center;
+}
+
+.ui-loading-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--pc-green);
+    font-weight: 600;
+}
+
+.ui-inline-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 28px 12px;
+    color: var(--pc-ink-soft);
+    font-size: 13px;
+}
+
+.ui-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--pc-green-light);
+    border-top-color: var(--pc-gold);
+    border-radius: 50%;
+    animation: ui-spin 0.8s linear infinite;
+}
+
+@keyframes ui-spin {
+    to { transform: rotate(360deg); }
+}
+
+.ui-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 2100;
+    max-width: min(90vw, 380px);
+    padding: 13px 18px;
+    border: 1px solid var(--pc-green-light);
+    border-left: 4px solid var(--pc-green);
+    border-radius: var(--radius-sm);
+    background: var(--pc-surface);
+    box-shadow: var(--pc-shadow-strong);
+    color: var(--pc-green-dark);
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ui-toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ui-toast-error {
+    border-color: var(--pc-red-light);
+    border-left-color: var(--pc-red);
+    color: var(--pc-red);
+}
+
+.ui-confirm-mark {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: var(--pc-green-light);
+    color: var(--pc-green);
+    font-family: var(--font-display);
+    font-weight: 800;
+}
+
+.ui-confirm-card h2 {
+    margin-bottom: 6px;
+    font-size: 20px;
+    color: var(--pc-green);
+}
+
+.ui-confirm-card p {
+    color: var(--pc-ink-soft);
+    font-size: 14px;
+}
+
+.ui-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.ui-confirm-actions button {
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.ui-button-secondary {
+    border: 1px solid var(--pc-kraft);
+    background: var(--pc-cream);
+    color: var(--pc-ink-soft);
+}
+
+.ui-button-primary {
+    border: 1px solid var(--pc-green);
+    background: var(--pc-green);
+    color: #fff;
+}
+
+.ui-button-primary:hover { 
+    background: var(--pc-green-dark);
+}
+
 .modal-box h2 {
     font-size: 20px;
     color: var(--pc-green);
@@ -1072,12 +1317,16 @@ button {
         overflow-x: hidden;
     }
 
+    .app-layout,
     .main-content,
     .page-content {
+        width: 100%;
         min-width: 0;
     }
 
     .page-content {
+        max-width: none;
+        margin: 0;
         padding: 22px 16px;
     }
 
@@ -1120,6 +1369,7 @@ button {
     .menu-list-panel,
     .recipe-panel,
     .order-summary-panel {
+        width: 100%;
         padding: 16px;
     }
 
@@ -1236,5 +1486,20 @@ button {
 
     .staff-topbar nav a {
         padding: 8px 10px;
+    }
+
+    .ui-toast {
+        right: 12px;
+        bottom: 12px;
+        left: 12px;
+        max-width: none;
+    }
+
+    .ui-confirm-actions {
+        flex-direction: column-reverse;
+    }
+
+    .ui-confirm-actions button {
+        width: 100%;
     }
 }

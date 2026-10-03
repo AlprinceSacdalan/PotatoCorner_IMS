@@ -9,11 +9,13 @@ let editingMenuId = null;
 let materialsCache = [];
 
 async function loadMenuItems() {
+    const list = document.getElementById('menuItemList');
+    list.innerHTML = renderInlineLoading('Loading menu items...');
+
     const response = await fetch(`${API_BASE}/menu/get_menu.php`);
     const result = await response.json();
     if (!result.success) return;
 
-    const list = document.getElementById('menuItemList');
     list.innerHTML = '';
     result.data.forEach(item => {
         const isAvailable = item.status === 'available';
@@ -32,7 +34,7 @@ async function loadMenuItems() {
             </span>
         `;
 
-        row.querySelector('.menu-item-row-label').addEventListener('click', () => selectMenuItem(item.menu_id, item.name));
+        row.addEventListener('click', () => selectMenuItem(item.menu_id, item.name));
         row.querySelector('[data-action="edit"]').addEventListener('click', (e) => {
             e.stopPropagation();
             openEditModal(item);
@@ -51,18 +53,27 @@ async function toggleMenuStatus(item) {
     const confirmMsg = isAvailable
         ? `Mark "${item.name}" as unavailable? It will disappear from the Process Sale menu.`
         : `Mark "${item.name}" as available again?`;
-    if (!confirm(confirmMsg)) return;
+    const confirmed = await confirmAction(confirmMsg, isAvailable ? 'Mark unavailable?' : 'Mark available?');
+    if (!confirmed) return;
 
-    const response = await fetch(`${API_BASE}/menu/toggle_menu_status.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ menu_id: item.menu_id })
-    });
-    const result = await response.json();
-    if (result.success) {
-        loadMenuItems();
-    } else {
-        alert(result.message);
+    showLoading(isAvailable ? 'Marking unavailable...' : 'Marking available...');
+    try {
+        const response = await fetch(`${API_BASE}/menu/toggle_menu_status.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ menu_id: item.menu_id })
+        });
+        const result = await response.json();
+        if (result.success) {
+            showToast(isAvailable ? 'Item marked unavailable.' : 'Item marked available.');
+            await loadMenuItems();
+        } else {
+            showToast(result.message, 'error');
+        }
+    } catch (error) {
+        showToast('Unable to update this item right now.', 'error');
+    } finally {
+        hideLoading();
     }
 }
 
@@ -117,11 +128,13 @@ async function selectMenuItem(menuId, menuName) {
 }
 
 async function loadRecipe(menuId) {
+    const tbody = document.getElementById('recipeBody');
+    tbody.innerHTML = `<tr><td colspan="3">${renderInlineLoading('Loading recipe...')}</td></tr>`;
+
     const response = await fetch(`${API_BASE}/menu/get_recipe.php?menu_id=${menuId}`);
     const result = await response.json();
     if (!result.success) return;
 
-    const tbody = document.getElementById('recipeBody');
     tbody.innerHTML = '';
     result.data.forEach(ing => {
         const tr = document.createElement('tr');
@@ -186,23 +199,34 @@ async function saveRecipeRow(tr, ing) {
 }
 
 async function deleteRecipeRow(recipeId, ingredientName) {
-    if (!confirm(`Remove "${ingredientName}" from this recipe?`)) return;
+    const confirmed = await confirmAction(`Remove "${ingredientName}" from this recipe?`, 'Remove ingredient?');
+    if (!confirmed) return;
 
-    const response = await fetch(`${API_BASE}/menu/delete_recipe_item.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipe_id: recipeId })
-    });
-    const result = await response.json();
+    showLoading('Removing ingredient...');
+    try {
+        const response = await fetch(`${API_BASE}/menu/delete_recipe_item.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recipe_id: recipeId })
+        });
+        const result = await response.json();
 
-    if (result.success) {
-        loadRecipe(selectedMenuId);
-    } else {
-        document.getElementById('recipeMsg').textContent = result.message;
+        if (result.success) {
+            showToast('Ingredient removed.');
+            await loadRecipe(selectedMenuId);
+        } else {
+            document.getElementById('recipeMsg').textContent = result.message;
+            showToast(result.message, 'error');
+        }
+    } catch (error) {
+        showToast('Unable to remove this ingredient right now.', 'error');
+    } finally {
+        hideLoading();
     }
 }
 
 document.getElementById('addIngredientBtn').addEventListener('click', async function() {
+    const addButton = this;
     const material_id = document.getElementById('ingredientSelect').value;
     const quantity_required = document.getElementById('ingredientQty').value;
     const msg = document.getElementById('recipeMsg');
@@ -213,18 +237,37 @@ document.getElementById('addIngredientBtn').addEventListener('click', async func
         return;
     }
 
-    const response = await fetch(`${API_BASE}/menu/save_recipe.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ menu_id: selectedMenuId, material_id, quantity_required })
-    });
-    const result = await response.json();
+    const ingredientName = document.getElementById('ingredientSelect').selectedOptions[0].textContent;
+    const confirmed = await confirmAction(
+        `Add ${quantity_required} units of ${ingredientName} to this recipe?`,
+        'Confirm ingredient'
+    );
+    if (!confirmed) return;
 
-    if (result.success) {
-        document.getElementById('ingredientQty').value = '';
-        loadRecipe(selectedMenuId);
-    } else {
-        msg.textContent = result.message;
+    addButton.disabled = true;
+    showLoading('Adding ingredient...');
+    try {
+        const response = await fetch(`${API_BASE}/menu/save_recipe.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ menu_id: selectedMenuId, material_id, quantity_required })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            document.getElementById('ingredientQty').value = '';
+            showToast('Ingredient added to the recipe.');
+            await loadRecipe(selectedMenuId);
+        } else {
+            msg.textContent = result.message;
+            showToast(result.message, 'error');
+        }
+    } catch (error) {
+        msg.textContent = 'Unable to add the ingredient right now.';
+        showToast('Unable to add the ingredient right now.', 'error');
+    } finally {
+        hideLoading();
+        addButton.disabled = false;
     }
 });
 
@@ -232,6 +275,7 @@ document.getElementById('addMenuItemBtn').addEventListener('click', openAddModal
 document.getElementById('cancelMenuItemBtn').addEventListener('click', closeMenuItemModal);
 
 document.getElementById('saveNewItemBtn').addEventListener('click', async function() {
+    const saveButton = this;
     const name = document.getElementById('newItemName').value.trim();
     const price = document.getElementById('newItemPrice').value;
     const errorEl = document.getElementById('menuItemModalError');
@@ -247,18 +291,31 @@ document.getElementById('saveNewItemBtn').addEventListener('click', async functi
         payload.menu_id = editingMenuId;
     }
 
-    const response = await fetch(`${API_BASE}/menu/save_menu_item.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
-    const result = await response.json();
+    saveButton.disabled = true;
+    showLoading(editingMenuId ? 'Updating item...' : 'Saving item...');
+    try {
+        const response = await fetch(`${API_BASE}/menu/save_menu_item.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const result = await response.json();
 
-    if (result.success) {
-        closeMenuItemModal();
-        loadMenuItems();
-    } else {
-        errorEl.textContent = result.message;
+        if (result.success) {
+            const wasEditing = !!editingMenuId;
+            closeMenuItemModal();
+            showToast(wasEditing ? 'Menu item updated.' : 'Menu item added.');
+            await loadMenuItems();
+        } else {
+            errorEl.textContent = result.message;
+            showToast(result.message, 'error');
+        }
+    } catch (error) {
+        errorEl.textContent = 'Unable to save this item right now.';
+        showToast('Unable to save this item right now.', 'error');
+    } finally {
+        hideLoading();
+        saveButton.disabled = false;
     }
 });
 

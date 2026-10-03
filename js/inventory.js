@@ -8,6 +8,9 @@ let materialsCache = [];
 let correctingMaterial = null;
 
 async function loadInventory() {
+    document.getElementById('inventoryBody').innerHTML =
+        `<tr><td colspan="6">${renderInlineLoading('Loading inventory...')}</td></tr>`;
+
     const response = await fetch(`${API_BASE}/inventory/get_inventory.php`);
     const result = await response.json();
 
@@ -70,6 +73,7 @@ function closeCorrectStockModal() {
 document.getElementById('cancelCorrectStockBtn').addEventListener('click', closeCorrectStockModal);
 
 document.getElementById('saveCorrectStockBtn').addEventListener('click', async function() {
+    const saveButton = this;
     const errorEl = document.getElementById('correctStockError');
     errorEl.textContent = '';
 
@@ -79,22 +83,40 @@ document.getElementById('saveCorrectStockBtn').addEventListener('click', async f
         return;
     }
 
-    const response = await fetch(`${API_BASE}/inventory/add_stock.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            material_id: correctingMaterial.material_id,
-            user_id: currentUser.user_id,
-            new_total: newTotal
-        })
-    });
-    const result = await response.json();
+    const confirmed = await confirmAction(
+        `Set ${correctingMaterial.name} stock to ${newTotal} ${correctingMaterial.unit}?`,
+        'Confirm stock correction'
+    );
+    if (!confirmed) return;
 
-    if (result.success) {
-        closeCorrectStockModal();
-        loadInventory();
-    } else {
-        errorEl.textContent = result.message;
+    saveButton.disabled = true;
+    showLoading('Updating inventory...');
+    try {
+        const response = await fetch(`${API_BASE}/inventory/add_stock.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                material_id: correctingMaterial.material_id,
+                user_id: currentUser.user_id,
+                new_total: newTotal
+            })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            closeCorrectStockModal();
+            showToast('Inventory updated successfully.');
+            await loadInventory();
+        } else {
+            errorEl.textContent = result.message;
+            showToast(result.message, 'error');
+        }
+    } catch (error) {
+        errorEl.textContent = 'Unable to update inventory right now.';
+        showToast('Unable to update inventory right now.', 'error');
+    } finally {
+        hideLoading();
+        saveButton.disabled = false;
     }
 });
 
