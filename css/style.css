@@ -238,6 +238,10 @@ button:disabled {
     border-right: 1px solid var(--pc-green-dark);
     padding: 1.5rem 0.75rem;
     flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .sidebar .brand {
@@ -546,6 +550,9 @@ button {
         padding: 12px 16px 0;
         border-right: none;
         border-bottom: 1px solid var(--pc-kraft);
+        position: static;
+        height: auto;
+        overflow-y: visible;
     }
 
     .sidebar .brand {
