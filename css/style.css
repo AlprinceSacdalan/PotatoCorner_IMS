@@ -200,20 +200,20 @@ button:disabled {
     align-items: center;
     gap: 12px;
     padding: 14px 28px;
-    background: var(--pc-surface);
-    border-bottom: 1px solid var(--pc-kraft);
+    background: #6B4226;
+    border-bottom: 1px solid #542F1B;
 }
 
 .topbar #welcomeMsg {
     font-size: 14px;
-    color: var(--pc-ink-soft);
+    color: var(--pc-cream);
 }
 
 .topbar button {
     padding: 8px 16px;
-    background: transparent;
-    color: var(--pc-red);
-    border: 1px solid var(--pc-red-light);
+    background: rgb(245, 68, 68);
+    color: var(--pc-green-dark);
+    border: none;
     border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 13px;
@@ -221,7 +221,9 @@ button:disabled {
 }
 
 .topbar button:hover {
-    background: var(--pc-red-light);
+    background: var(--pc-gold);
+    border-color: var(--pc-gold);
+    color: var(--pc-green-dark);
 }
 
 /* Sidebar layout  */
@@ -232,8 +234,8 @@ button:disabled {
 
 .sidebar {
     width: 238px;
-    background: var(--pc-surface);
-    border-right: 1px solid var(--pc-kraft);
+    background: var(--pc-green);
+    border-right: 1px solid var(--pc-green-dark);
     padding: 1.5rem 0.75rem;
     flex-shrink: 0;
 }
@@ -246,7 +248,7 @@ button:disabled {
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 14px;
-    color: var(--pc-green);
+    color: #ffffff;
 }
 
 .sidebar .brand img {
@@ -259,7 +261,7 @@ button:disabled {
     display: block;
     padding: 11px 12px;
     margin: 3px 0;
-    color: var(--pc-ink-soft);
+    color: rgba(255, 255, 255, 0.88);
     text-decoration: none;
     font-size: 14px;
     border-left: 3px solid transparent;
@@ -268,14 +270,22 @@ button:disabled {
 }
 
 .sidebar nav a:hover {
-    background: var(--pc-green-light);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .sidebar nav a.active {
-    background: var(--pc-green-light);
+    background: rgba(255, 255, 255, 0.18);
     border-left-color: var(--pc-gold);
-    color: var(--pc-green);
+    color: #ffffff;
     font-weight: 600;
+}
+
+.sidebar-logo {
+    display: block;
+    width: 100%;
+    max-width: 190px;
+    height: auto;
+    margin: 24rem auto 0;
 }
 
 .main-content {
