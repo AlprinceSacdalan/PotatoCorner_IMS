@@ -1,12 +1,19 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager(); 
 
 $input = json_decode(file_get_contents('php://input'), true);
 $user_id = $input['user_id'] ?? null;
 
 if (!$user_id) {
     sendResponse(false, 'user_id is required');
+}
+
+if ((int)$user_id === (int)$_SESSION['user_id']) {
+    sendResponse(false, 'You cannot deactivate your own account');
+    exit;
 }
 
 $stmt = $conn->prepare("SELECT status FROM users WHERE user_id = ?");

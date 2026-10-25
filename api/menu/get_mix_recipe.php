@@ -1,7 +1,8 @@
 <?php
-// Place in api/menu/get_mix_recipe.php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_login(); 
 
 $menu_id = $_GET['menu_id'] ?? null;
 if (!$menu_id) {

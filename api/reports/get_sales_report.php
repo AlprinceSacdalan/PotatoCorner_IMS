@@ -2,6 +2,8 @@
 date_default_timezone_set('Asia/Manila');
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_login();
 
 $range = $_GET['range'] ?? 'today';
 

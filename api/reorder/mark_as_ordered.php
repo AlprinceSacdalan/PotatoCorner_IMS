@@ -1,10 +1,12 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager();
 
 $input = json_decode(file_get_contents('php://input'), true);
 $material_id = $input['material_id'] ?? null;
-$user_id = $input['user_id'] ?? null;
+$user_id = (int)$_SESSION['user_id'];
 
 if (!$material_id || !$user_id) {
     sendResponse(false, 'material_id and user_id are required');

@@ -1,15 +1,19 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager();
 
 $input = json_decode(file_get_contents('php://input'), true);
 $material_id = $input['material_id'] ?? null;
-$user_id = $input['user_id'] ?? null;
+$user_id = (int)$_SESSION['user_id'];
 $quantity_wasted = $input['quantity_wasted'] ?? null;
 $reason = trim($input['reason'] ?? '');
 
-if (!$material_id || !$user_id || !$quantity_wasted || $reason === '') {
-    sendResponse(false, 'material_id, user_id, quantity_wasted, and reason are all required');
+if (!$material_id || !$user_id || $reason === '' ||
+    !is_numeric($quantity_wasted) || $quantity_wasted <= 0) {
+    sendResponse(false, 'Material, a positive quantity, and a reason are required');
+    exit;
 }
 
 $conn->begin_transaction();

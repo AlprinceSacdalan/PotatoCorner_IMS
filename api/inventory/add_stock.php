@@ -1,14 +1,17 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager(); 
 
 $input = json_decode(file_get_contents('php://input'), true);
 $material_id = $input['material_id'] ?? null;
-$user_id = $input['user_id'] ?? null;
+$user_id = (int)$_SESSION['user_id'];
 $new_total = $input['new_total'] ?? null;
 
-if (!$material_id || !$user_id || $new_total === null || $new_total === '') {
-    sendResponse(false, 'material_id, user_id, and new_total are required');
+if (!is_numeric($new_total) || $new_total < 0) {
+    sendResponse(false, 'Enter a valid stock amount (0 or more)');
+    exit;
 }
 if ($new_total < 0) {
     sendResponse(false, 'Stock cannot be negative');

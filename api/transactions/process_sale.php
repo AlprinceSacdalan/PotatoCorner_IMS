@@ -2,11 +2,13 @@
 require '../helpers/response.php';
 require '../helpers/check_low_stock.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_login(); 
 
 const MIX_COMPONENT_MAX_FLAVORS = 1;
 
 $input = json_decode(file_get_contents('php://input'), true);
-$user_id = $input['user_id'] ?? null;
+$user_id = (int)$_SESSION['user_id'];
 $items = $input['items'] ?? null;
 
 if (!$user_id || !$items || count($items) === 0) {
@@ -16,6 +18,12 @@ if (!$user_id || !$items || count($items) === 0) {
 $conn->begin_transaction();
 
 try {
+    foreach ($items as $item) {
+    $q = $item['quantity'] ?? null;
+    if (!isset($item['menu_id']) || !is_numeric($q) || $q != (int)$q || $q < 1 || $q > 99) {
+        throw new Exception('Invalid item or quantity');
+    }
+}
     // validate stock (and flavor counts) 
     foreach ($items as $item) {
         // Base recipe check (existing logic, unchanged)
@@ -171,7 +179,11 @@ try {
 
     $conn->commit();
 
-    checkAndSendLowStockAlerts($conn);
+    try {
+     checkAndSendLowStockAlerts($conn);
+    } catch (Throwable $e) {
+     error_log('Low-stock alert failed: ' . $e->getMessage());
+    }
 
     sendResponse(true, 'Sale recorded', ['transaction_id' => $transaction_id, 'total_amount' => $total_amount]);
 
@@ -235,7 +247,15 @@ function checkStock($conn, $material_id, $needed) {
 }
 
 function deductStock($conn, $material_id, $amount) {
-    $stmt = $conn->prepare("UPDATE raw_materials SET current_stock = current_stock - ? WHERE material_id = ?");
-    $stmt->bind_param("di", $amount, $material_id);
+    if ($amount <= 0) return;
+    $stmt = $conn->prepare(
+        "UPDATE raw_materials
+         SET current_stock = current_stock - ?
+         WHERE material_id = ? AND current_stock >= ?"
+    );
+    $stmt->bind_param("did", $amount, $material_id, $amount);
     $stmt->execute();
+    if ($stmt->affected_rows === 0) {
+        throw new Exception('Insufficient stock for the items in this order');
+    }
 }

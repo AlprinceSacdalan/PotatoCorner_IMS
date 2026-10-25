@@ -14,6 +14,9 @@ $email = ($email === '') ? null : $email;
 $f_name = trim($input['f_name'] ?? '');
 $l_name = trim($input['l_name'] ?? '');
 $role = $input['role'] ?? '';
+if ($user_id && (int)$user_id === (int)$_SESSION['user_id']) {
+    $role = $_SESSION['role'];
+}
 $password = $input['password'] ?? '';
 $phone_number = trim($input['phone_number'] ?? '');
 $receive_sms_alerts = !empty($input['receive_sms_alerts']) ? 1 : 0;
@@ -27,7 +30,7 @@ if (
     sendResponse(false, 'Username, first name, last name, and a valid role are required');
 }
 
-if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+if ($email !== null && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     sendResponse(false, 'Please enter a valid email address');
 }
 
@@ -63,10 +66,11 @@ try {
         sendResponse(true, 'Account updated');
     } else {
         // Create account with a hashed password.
-        if ($password === '') {
-            sendResponse(false, 'Password is required for a new account');
+        if (strlen($password) < 8 || strlen($password) > 72) {
+         sendResponse(false, 'Password must be 8 to 72 characters');
+         exit;
         }
-
+        
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt = $conn->prepare(

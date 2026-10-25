@@ -1,6 +1,8 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_login();
 
 $result = $conn->query("SELECT material_id, name, unit, current_stock, threshold FROM raw_materials ORDER BY name");
 

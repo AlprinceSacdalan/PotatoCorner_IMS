@@ -1,6 +1,8 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager();
 
 $result = $conn->query("
     SELECT rm.material_id, rm.name, rm.unit, rm.current_stock, rm.threshold,

@@ -1,6 +1,8 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager();
 
 $input = json_decode(file_get_contents('php://input'), true);
 $menu_id = $input['menu_id'] ?? null;

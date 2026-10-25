@@ -1,7 +1,8 @@
 <?php
-// Place in api/flavors/get_flavor_sizes.php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_login(); 
 
 $result = $conn->query("SELECT size_name, grams_per_serving, max_flavors FROM flavor_usage_by_size");
 

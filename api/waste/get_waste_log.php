@@ -1,6 +1,8 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager();
 
 $result = $conn->query("
     SELECT wl.wasteLog_id, rm.name AS material_name, rm.unit, wl.quantity_wasted,

@@ -67,7 +67,7 @@ function openEditModal(u) {
     document.getElementById('userRole').value = u.role;
     document.getElementById('userPhone').value = u.phone_number || '';
     document.getElementById('userReceiveSms').checked = !!Number(u.receive_sms_alerts);
-    document.getElementById('userPassword').style.display = 'none'; // password not editable here
+    document.getElementById('userPassword').style.display = 'none'; 
     document.getElementById('userModalError').textContent = '';
     document.getElementById('userModal').classList.remove('hidden');
 }
@@ -98,6 +98,10 @@ document.getElementById('saveUserBtn').addEventListener('click', async function(
     }
     if (!editingUserId && !password) {
         errorEl.textContent = 'Password is required for a new account.';
+        return;
+    }
+    if (!editingUserId && (password.length < 8 || password.length > 72)) {
+        errorEl.textContent = 'Password must be 8 to 72 characters.';
         return;
     }
     if (receive_sms_alerts && !phone_number) {
@@ -153,10 +157,10 @@ document.getElementById('confirmResetBtn').addEventListener('click', async funct
     const errorEl = document.getElementById('resetPasswordError');
     errorEl.textContent = '';
 
-    if (new_password.length < 6) {
-        errorEl.textContent = 'Password must be at least 6 characters.';
-        return;
-    }
+      if (new_password.length < 8 || new_password.length > 72) {
+         errorEl.textContent = 'Password must be 8 to 72 characters.';
+         return;
+        }
 
     const response = await fetch(`${API_BASE}/users/reset_password.php`, {
         method: 'POST',
@@ -193,5 +197,31 @@ async function toggleUserStatus(u) {
         alert(result.message);
     }
 }
+
+function addPeek(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'peek-wrap';
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'peek-btn';
+    btn.textContent = '👁';
+    btn.setAttribute('aria-label', 'Show password');
+    btn.addEventListener('click', () => {
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        btn.textContent = show ? '👁' : '👁';
+        btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    });
+    wrap.appendChild(btn);
+}
+
+addPeek('newPasswordInput');
+addPeek('userPassword');
 
 loadUsers();
