@@ -1,6 +1,8 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager();
 
 $stmt = $conn->prepare("
     SELECT user_id, username, f_name, l_name, role,

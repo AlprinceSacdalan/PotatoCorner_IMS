@@ -1,3 +1,13 @@
+const _fetch = window.fetch;
+window.fetch = async (...args) => {
+    const res = await _fetch(...args);
+    if (res.status === 401) {
+        localStorage.removeItem('user');
+        window.location.href = '/PotatoCorner_IMS/html/login.html';
+    }
+    return res;
+};
+
 const userStr = localStorage.getItem('user');
 
 if (!userStr) {
@@ -17,7 +27,11 @@ if (!userStr) {
             );
             if (!confirmed) return;
 
-            showLoading('Signing you out...');
+           showLoading('Signing you out...');
+           try {
+             await fetch('../api/auth/logout.php', { method: 'POST' });
+            } catch (e) {
+            }
             localStorage.removeItem('user');
             window.location.href = '/PotatoCorner_IMS/html/login.html';
         });

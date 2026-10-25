@@ -1,4 +1,3 @@
-
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
@@ -36,9 +35,21 @@ try {
 
     if (!$user) {
         sendResponse(true, $genericMessage);
+        exit;
     }
 
-    
+    $stmt = $conn->prepare(
+        "SELECT COUNT(*) AS c FROM password_resets
+         WHERE user_id = ?
+           AND expires_at > DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTE)"
+    );
+    $stmt->bind_param('i', $user['user_id']);
+    $stmt->execute();
+    if ((int)$stmt->get_result()->fetch_assoc()['c'] >= 3) {
+        sendResponse(true, $genericMessage);
+        exit;
+    }
+
     $stmt = $conn->prepare(
         "UPDATE password_resets
          SET used_at = UTC_TIMESTAMP()
@@ -58,7 +69,7 @@ try {
     $stmt->bind_param('is', $user['user_id'], $tokenHash);
     $stmt->execute();
 
-  
+  try {
     $resetUrl = 'http://localhost/PotatoCorner_IMS/html/reset_password.html?token='
         . urlencode($token);
 
@@ -92,8 +103,11 @@ try {
         "\nIf you did not request this, ignore this email.";
 
     $mail->send();
+    } catch (Throwable $mailError) {
+    error_log('Reset email failed: ' . $mailError->getMessage());
+}
+  sendResponse(true, $genericMessage);
 
-    sendResponse(true, $genericMessage);
 } catch (Throwable $e) {
     error_log('Password reset request failed: ' . $e->getMessage());
     http_response_code(500);

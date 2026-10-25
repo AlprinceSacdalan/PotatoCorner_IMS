@@ -2,12 +2,15 @@
 <?php
 require '../helpers/response.php';
 require '../config/db_config.php';
+require_once '../helpers/auth.php';
+require_manager();
 
 $input = json_decode(file_get_contents('php://input'), true);
 
 $user_id = $input['user_id'] ?? null;
 $username = trim($input['username'] ?? '');
 $email = strtolower(trim($input['email'] ?? ''));
+$email = ($email === '') ? null : $email;
 $f_name = trim($input['f_name'] ?? '');
 $l_name = trim($input['l_name'] ?? '');
 $role = $input['role'] ?? '';

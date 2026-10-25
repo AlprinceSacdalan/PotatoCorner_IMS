@@ -19,19 +19,28 @@ if ($result->num_rows === 0) {
     sendResponse(false, 'Invalid username or password');
 }
 
-$user = $result->fetch_assoc();
+require_once '../helpers/auth.php'; 
 
-if ($user['status'] !== 'active') {
-    sendResponse(false, 'This account has been deactivated');
-}
+$user = $result->fetch_assoc();
 
 if (!password_verify($password, $user['password_hash'])) {
     sendResponse(false, 'Invalid username or password');
+    exit;
 }
 
+if ($user['status'] !== 'active') {
+    sendResponse(false, 'This account has been deactivated');
+    exit;
+}
+
+start_app_session();
+session_regenerate_id(true);
+$_SESSION['user_id'] = (int)$user['user_id'];
+$_SESSION['role']    = $user['role'];
+
 sendResponse(true, 'Login successful', [
-    'user_id' => $user['user_id'],
-    'username' => $user['username'],
+    'user_id'   => $user['user_id'],
+    'username'  => $user['username'],
     'full_name' => $user['f_name'] . ' ' . $user['l_name'],
-    'role' => $user['role']
+    'role'      => $user['role']
 ]);
