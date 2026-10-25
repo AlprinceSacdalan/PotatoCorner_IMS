@@ -167,6 +167,26 @@ button:disabled {
     padding-right: 50px;
 }
 
+.forgot-password-link {
+    display: inline-block;
+    color: #087443;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+    color: #df252d;
+    text-decoration: underline;
+}
+
+.forgot-password-link:focus-visible {
+    outline: 2px solid #087443;
+    outline-offset: 3px;
+    border-radius: 3px;
+}
+
 .login-box form > button[type="submit"] {
     width: 100%;
     padding: 15px;

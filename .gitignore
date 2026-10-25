@@ -1,1 +1,3 @@
 api/config/textbee_config.php
+/vendor/
+/potatocorner_ims.sql

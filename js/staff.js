@@ -46,6 +46,7 @@ function openAddModal() {
     document.getElementById('userFirstName').value = '';
     document.getElementById('userLastName').value = '';
     document.getElementById('userUsername').value = '';
+    document.getElementById('userEmail').value = '';
     document.getElementById('userRole').value = 'staff';
     document.getElementById('userPhone').value = '';
     document.getElementById('userReceiveSms').checked = false;
@@ -62,6 +63,7 @@ function openEditModal(u) {
     document.getElementById('userFirstName').value = u.f_name;
     document.getElementById('userLastName').value = u.l_name;
     document.getElementById('userUsername').value = u.username;
+    document.getElementById('userEmail').value = u.email || '';
     document.getElementById('userRole').value = u.role;
     document.getElementById('userPhone').value = u.phone_number || '';
     document.getElementById('userReceiveSms').checked = !!Number(u.receive_sms_alerts);
@@ -82,6 +84,7 @@ document.getElementById('saveUserBtn').addEventListener('click', async function(
     const f_name = document.getElementById('userFirstName').value.trim();
     const l_name = document.getElementById('userLastName').value.trim();
     const username = document.getElementById('userUsername').value.trim();
+    const email = document.getElementById('userEmail').value.trim();
     const role = document.getElementById('userRole').value;
     const password = document.getElementById('userPassword').value;
     const phone_number = document.getElementById('userPhone').value.trim();
@@ -102,7 +105,15 @@ document.getElementById('saveUserBtn').addEventListener('click', async function(
         return;
     }
 
-    const payload = { f_name, l_name, username, role, phone_number, receive_sms_alerts };
+    const payload = {
+     f_name,
+     l_name,
+     username,
+     email,
+     role,
+     phone_number,
+     receive_sms_alerts
+    };
     if (editingUserId) {
         payload.user_id = editingUserId;
     } else {
