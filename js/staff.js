@@ -52,6 +52,8 @@ function openAddModal() {
     document.getElementById('userReceiveSms').checked = false;
     document.getElementById('userPassword').value = '';
     document.getElementById('userPassword').style.display = 'block';
+    document.getElementById('userPassword').parentElement.style.display = 'block';
+    document.getElementById('userPassword').type = 'password';
     document.getElementById('userPassword').placeholder = 'Password';
     document.getElementById('userModalError').textContent = '';
     document.getElementById('userModal').classList.remove('hidden');
@@ -68,6 +70,7 @@ function openEditModal(u) {
     document.getElementById('userPhone').value = u.phone_number || '';
     document.getElementById('userReceiveSms').checked = !!Number(u.receive_sms_alerts);
     document.getElementById('userPassword').style.display = 'none'; 
+    document.getElementById('userPassword').parentElement.style.display = 'none';
     document.getElementById('userModalError').textContent = '';
     document.getElementById('userModal').classList.remove('hidden');
 }
